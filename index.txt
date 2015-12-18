@@ -1,0 +1,9 @@
+http://beta.youku.com/u/UMzA4NjcwODU3Ng==/createFriendShip?flg=1&fid=460910987
+
+10.111.88.133 f170137bfc5080f3a6ffd180433d4337168053fb
+
+10.111.88.133/anonymsubs/create.json?uid=f170137bfc5080f3a6ffd180433d4337168053fb&friend_uid=460910987
+
+
+mobileview_new1.js
+sh /root/wdw/pushdy.sh >> /root/wdw/pushdy.log
