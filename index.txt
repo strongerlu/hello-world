@@ -8,3 +8,4 @@ http://beta.youku.com/u/UMzA4NjcwODU3Ng==/createFriendShip?flg=1&fid=460910987
 mobileview_new1.js
 sh /root/wdw/pushdy.sh >> /root/wdw/pushdy.log
 1111111111
+222222222
