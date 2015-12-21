@@ -9,3 +9,5 @@ mobileview_new1.js
 sh /root/wdw/pushdy.sh >> /root/wdw/pushdy.log
 1111111111
 222222222
+
+added to storge
