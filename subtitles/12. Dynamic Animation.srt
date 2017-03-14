@@ -1,0 +1,8967 @@
+1
+00:00:00,001 --> 00:00:04,569
+[MUSIC]
+[音乐]
+
+2
+00:00:04,571 --> 00:00:07,705
+Stanford University.
+斯坦福大学
+
+3
+00:00:07,707 --> 00:00:11,809
+>> Okay, well, welcome to lecture 12 of Stanford CS193P
+欢迎来到 CS193P 课程的第12讲
+
+4
+00:00:11,811 --> 00:00:13,243
+winter of 2015.
+这是 CS193P 在2015年冬季的课程
+
+5
+00:00:13,245 --> 00:00:16,513
+Today we're going to talk about a different kind
+今天我们想要聊一些与上周
+
+6
+00:00:16,515 --> 00:00:17,880
+of animation than we talked about last week,
+讲的不一样的动画效果
+
+7
+00:00:17,882 --> 00:00:20,549
+which is physics-based dynamic animation, it's called.
+叫做，物理动态动画效果（Physics-based Dynamic Animation）
+
+8
+00:00:20,551 --> 00:00:22,418
+And then I'm going to do a big demo of that,
+然后我会做一个大的 Demo
+
+9
+00:00:22,420 --> 00:00:24,119
+which is called Dropit.
+这个 Demo 我想称之为 Dropit
+
+10
+00:00:24,121 --> 00:00:26,254
+First of all, let me say that what we're,
+首先
+
+11
+00:00:26,256 --> 00:00:30,158
+our topic this week is dynamic animation.
+我们这周的话题就是动态动画效果
+
+12
+00:00:30,160 --> 00:00:31,959
+So it's a different kind of animation than we saw
+这与我们上周讲到的动画效果
+
+13
+00:00:31,961 --> 00:00:33,127
+last week.
+有相当的不同
+
+14
+00:00:33,129 --> 00:00:34,961
+It's a physics-based thing.
+它是基于物理效果的
+
+15
+00:00:34,963 --> 00:00:36,963
+Now we're gonna have some fun with it,
+因为是与真实世界的物理效果相同
+
+16
+00:00:36,965 --> 00:00:38,564
+this physics-based thing.
+所以我们能够在这上面做一些有趣的事情
+
+17
+00:00:38,566 --> 00:00:40,333
+And you're gonna write a game with it.
+同时，你们会用这个来编写一个游戏
+
+18
+00:00:40,335 --> 00:00:43,102
+Yeah, I'm not sure you would really use it for that.
+当然，我并不确定你肯定会用到它
+
+19
+00:00:43,104 --> 00:00:44,670
+It's more for things like this.
+但是更多类似于这种的东西
+
+20
+00:00:44,672 --> 00:00:46,604
+You see how when I slide this up,
+比如现在，我上拉 Control Center
+
+21
+00:00:46,606 --> 00:00:49,374
+it kind of bounces a little and wiggles?
+在最后的时刻，它会有一个晃动的弹跳效果
+
+22
+00:00:49,376 --> 00:00:52,109
+See? It doesn't just kind of solid
+看到了吗？这个动画并不是
+
+23
+00:00:52,111 --> 00:00:55,679
+go up and stop, it kind of bounces off the top.
+我直接上拉 Control Center，然后它就停止在最高的点上了
+
+24
+00:00:55,681 --> 00:00:58,515
+Basically what's happening there is that there's gravity
+通常，我们会说，这里有一个仿重力
+
+25
+00:00:58,517 --> 00:00:59,783
+pointing up.
+
+26
+00:00:59,785 --> 00:01:01,168
+Okay?
+明白了吗？
+
+27
+00:01:01,169 --> 00:01:02,552
+And then there's a little bit of elasticity, and
+同时，这里会有一点点的弹性
+
+28
+00:01:02,554 --> 00:01:06,055
+that view it's just being allowed to fall up and
+所以，这个视图被允许向上滑动
+
+29
+00:01:06,057 --> 00:01:07,723
+bounce off the bottom.
+并在到达起顶部的时候有一个弹跳效果
+
+30
+00:01:07,725 --> 00:01:09,091
+Okay? And that's what we're going to
+明白了吗？
+
+31
+00:01:09,093 --> 00:01:12,360
+learn how to do today is have gravity and bouncing and
+这也就是我们今天想要学习的内容，如何让一个视图
+
+32
+00:01:12,362 --> 00:01:14,429
+all this kind of physics behavior.
+拥有类似的重力效果和弹跳效果，等等类似的物理动画效果
+
+33
+00:01:14,431 --> 00:01:16,230
+But instead of just doing something, you know,
+但是，我们并不想通过一些平时很无聊的 Demo 来学习
+
+34
+00:01:16,232 --> 00:01:19,366
+boring like this, we're going to make a game out of it.
+取而代之的是，我们想要通过这个做一个游戏
+
+35
+00:01:19,368 --> 00:01:21,968
+The game we're going to make is Breakout.
+这个游戏我们想称之为 Breakout
+
+36
+00:01:21,970 --> 00:01:26,339
+Or Brickout, sometimes people call it.
+或者有些人喜欢称之为 Brickout
+
+37
+00:01:27,375 --> 00:01:31,243
+The point is to learn all the APIs of this physics-based
+这个游戏的目的是，学习所有基于这个物理动态引擎
+
+38
+00:01:31,245 --> 00:01:33,212
+dynamic engine.
+的 API
+
+39
+00:01:33,213 --> 00:01:35,180
+But to have some fun along the way, so I've actually made
+想要让这个过程是非常有趣的，我制定了
+
+40
+00:01:35,182 --> 00:01:38,683
+the requirements for the game itself be pretty light, okay?
+一部分很小的对游戏的要求
+
+41
+00:01:38,685 --> 00:01:40,985
+It just basically has to do the basics of the game, and
+最基础的是，必须符合游戏的规则
+
+42
+00:01:40,987 --> 00:01:43,787
+then giving you a lot of room to maneuver on kind of the fun
+其他的地方就留给你们自由发挥的空间
+
+43
+00:01:43,789 --> 00:01:45,589
+features of the game, so.
+你们肯定会很喜欢的
+
+44
+00:01:45,591 --> 00:01:48,191
+So dynamic animation is different
+好的，动态动画效果与我们上周
+
+45
+00:01:48,193 --> 00:01:49,859
+than the animation we talked about last week.
+讲的动画效果是不太一样的
+
+46
+00:01:49,861 --> 00:01:51,861
+Last week, we were talking about taking certain view
+上周我们讲的是，取一些特定的视图属性
+
+47
+00:01:51,863 --> 00:01:54,563
+properties and animating them over time.
+并根据时间来让它动起来
+
+48
+00:01:54,565 --> 00:01:57,366
+Or perhaps animating an entire change to a view
+类似于，将一个视图像卡片一样翻转过来的操作
+
+49
+00:01:57,368 --> 00:02:00,301
+like a flipping over a card by flipping the whole
+
+50
+00:02:00,303 --> 00:02:01,436
+view over, okay?
+
+51
+00:02:01,438 --> 00:02:03,671
+Or cross-dissolving the entire view.
+还有，Cross-Dissolving 整个视图这样的动画效果
+
+52
+00:02:03,673 --> 00:02:06,840
+This is more where we're going to have our views, and
+但是我们这周讲的是
+
+53
+00:02:06,842 --> 00:02:08,642
+we're going to have them moving around on screen.
+我们如何在屏幕上移动这些视图
+
+54
+00:02:08,644 --> 00:02:10,377
+Maybe running up against other things and
+有可能这些视图于其他的视图之间相互影响
+
+55
+00:02:10,379 --> 00:02:12,745
+bouncing a little bit, that kind of stuff.
+产生一些弹跳效果等类似的东西
+
+56
+00:02:13,681 --> 00:02:15,381
+The way you make this stuff work, okay,
+然而你想做出这样的动画效果
+
+57
+00:02:15,383 --> 00:02:16,715
+it's a multi-step process.
+要经历很多个步骤
+
+58
+00:02:16,717 --> 00:02:18,166
+The firs thing is,
+首先要做的是
+
+59
+00:02:18,167 --> 00:02:19,616
+you're going to need a UIDynamicAnimator.
+你需要一个 UIDynamicAnimator
+
+60
+00:02:19,619 --> 00:02:22,220
+That's the class that really drives the whole thing, so
+这是驱动这些物理动画效果的本源
+
+61
+00:02:22,222 --> 00:02:23,788
+you need one of those.
+所以你需要一个 UIDynamicAnimator 的实例
+
+62
+00:02:23,790 --> 00:02:27,424
+And you'll only have one for any animation that's going on.
+如果你需要一种类似的动画效果，那你就需要一个它的实例
+
+63
+00:02:27,426 --> 00:02:29,993
+You can have multiple UIDynamicAnimators if you had,
+你可以同时有多个 UIDynamicAnimator 的实例
+
+64
+00:02:29,995 --> 00:02:32,028
+for example, another view doing some animation at
+比如，同时有另外的一个视图拥有其他的物理动画效果
+
+65
+00:02:32,030 --> 00:02:32,962
+the same time.
+
+66
+00:02:32,964 --> 00:02:34,897
+But within your own view,
+但是在你自己的视图里面
+
+67
+00:02:34,898 --> 00:02:36,831
+you're probably just gonna have this one animator.
+你可能只需要一个 UIDynamicAnimator 的实例
+
+68
+00:02:36,834 --> 00:02:38,233
+So you're gonna create this animator,
+首先，你已经创建好了这个 UIDynamicAnimator
+
+69
+00:02:38,235 --> 00:02:41,770
+then you're gonna add dynamic behaviors to it.
+然后你要做的是，向它之上添加一些动态的行为
+
+70
+00:02:41,772 --> 00:02:44,005
+So behaviors are like gravity and
+比如类似于重力的行为
+
+71
+00:02:44,007 --> 00:02:46,774
+collision and things attached to each other.
+或者是碰撞，或是附加在一起的效果
+
+72
+00:02:46,776 --> 00:02:49,343
+It's how the things inside are going to behave, 'Kay?
+这就是你的 UIDynamicAnimator 中的视图相互之间影响的行为，明白了吗？
+
+73
+00:02:49,345 --> 00:02:52,179
+And these are basically physics-based descriptions of
+这就是描述了这些视图物理行为的东西
+
+74
+00:02:52,181 --> 00:02:53,814
+how they're going to behave.
+
+75
+00:02:53,816 --> 00:02:55,082
+And then, of course,
+当然，接下来
+
+76
+00:02:55,083 --> 00:02:56,349
+there's the things that are going to be animated,
+就是，想要受这些动画影响的视图
+
+77
+00:02:56,351 --> 00:02:59,752
+which for our purposes are always gonna be UIViews.
+目前我们只会用到 UIView 的实例
+
+78
+00:02:59,754 --> 00:03:01,237
+Okay?
+明白了吗？
+
+79
+00:03:01,238 --> 00:03:02,721
+These UIViews, DynamicItems,
+这些视图，Dynamic Items
+
+80
+00:03:02,723 --> 00:03:04,690
+they are going to be affected by the gravity and
+将会受其他对象的重力、碰撞
+
+81
+00:03:04,692 --> 00:03:07,559
+the collisions and all those things.
+或者其他的效果
+
+82
+00:03:07,561 --> 00:03:08,092
+Okay?
+明白了吗？
+
+83
+00:03:08,094 --> 00:03:09,060
+That's it.
+就这些步骤
+
+84
+00:03:09,062 --> 00:03:10,461
+Just create the dynamic animator,
+简单的说，先创建 UIDynamicAnimator 实例
+
+85
+00:03:10,463 --> 00:03:12,396
+create the behaviors you want and
+然后定义你想要的行为
+
+86
+00:03:12,397 --> 00:03:14,330
+configure them, add the items to the behaviors, bam.
+设置受影响的对象，将这些对象加到这个行为中
+
+87
+00:03:14,333 --> 00:03:16,132
+It'll just start automatically animating.
+然后，视图就自动动起来了
+
+88
+00:03:16,134 --> 00:03:17,633
+And if you remove an item from an behavior,
+同样的，当你从一个行为中移走了一个对象
+
+89
+00:03:17,635 --> 00:03:19,001
+it'll stop animating.
+它就停止了它的动画效果
+
+90
+00:03:19,003 --> 00:03:19,668
+Okay?
+明白了吗？
+
+91
+00:03:19,670 --> 00:03:20,535
+Simple as that.
+就是如此的简单
+
+92
+00:03:20,537 --> 00:03:22,137
+So let's look at the steps.
+让我们看一下这些步骤的代码
+
+93
+00:03:22,139 --> 00:03:25,373
+The first step is you need to create a UIDynamicAnimator,
+首先的第一步，创建一个 UIDynamicAnimator 的实例
+
+94
+00:03:25,375 --> 00:03:27,608
+and the dynamic animators we're going to use,
+我们这里想要使用的是 animator 变量
+
+95
+00:03:27,610 --> 00:03:30,444
+I'm only going to talk about ones that animate views.
+这里我们只会使用到视图
+
+96
+00:03:30,446 --> 00:03:32,646
+You can actually use an animator to animate arbitrary
+当然你还可以对一些抽象的东西做动画效果
+
+97
+00:03:32,648 --> 00:03:33,313
+things.
+
+98
+00:03:33,315 --> 00:03:34,514
+Okay?
+明白了吗？
+
+99
+00:03:34,515 --> 00:03:35,714
+Not even graphical things.
+不一定是要图形上的东西
+
+100
+00:03:35,717 --> 00:03:38,317
+But we're only gonna talk about animating views.
+但是这里我们只会讲到视图的动画
+
+101
+00:03:38,319 --> 00:03:40,302
+Okay?
+明白了吗？
+
+102
+00:03:40,303 --> 00:03:42,286
+So when we create a dynamic animator that animates views,
+我们已经创建了一个 UIDynamicAnimator 来让我们的视图动起来
+
+103
+00:03:42,289 --> 00:03:45,390
+we have to specify the top-level
+我们必须指定最顶层的 UIView
+
+104
+00:03:45,392 --> 00:03:48,927
+UIView, the view at the top of the view hierarchy where our
+也就是在视图系统中最顶层的那个视图
+
+105
+00:03:48,929 --> 00:03:50,061
+animations are occurring in.
+所有动画效果发生在这里面
+
+106
+00:03:50,063 --> 00:03:52,930
+Now animations can occur anywhere deep
+现在，动画效果就可以在视图系统中的任意一个地方
+
+107
+00:03:52,932 --> 00:03:54,765
+down that view hierarchy you want.
+其作用了
+
+108
+00:03:54,767 --> 00:03:57,034
+But we have specified the top-level view.
+所以我们需要指定最顶层的那个视图
+
+109
+00:03:57,036 --> 00:03:59,669
+So, in other words, any view that this dynamic animator's
+换言之，UIDynamicAnimator 所有的动画效果都会
+
+110
+00:03:59,671 --> 00:04:04,540
+going to animate has to be a subview or subview of
+是这个 Reference View 的子视图，或者是子视图的子视图
+
+111
+00:04:04,542 --> 00:04:07,142
+a subview of a subview of this reference view.
+
+112
+00:04:07,144 --> 00:04:08,810
+Okay? So that's the only argument
+明白了吗？
+
+113
+00:04:08,812 --> 00:04:11,479
+you have to provide when you create a dynamic animator.
+这就是你创建 UIDynamicAnimator 实例唯一需要的参数
+
+114
+00:04:13,116 --> 00:04:14,348
+Then you create these behaviors.
+接下来我们创建一些行为
+
+115
+00:04:14,350 --> 00:04:17,417
+Behaviors are these concrete subclasses of
+行为是一些 UIDynamicBehavior 的子类
+
+116
+00:04:17,419 --> 00:04:19,019
+UIDynamicBehavior.
+
+117
+00:04:19,021 --> 00:04:21,120
+And so there's like UIGravityBehavior,
+比如说 UIGravityBehavior
+
+118
+00:04:21,122 --> 00:04:23,689
+just say UIGravityBehavior, takes no arguments.
+接受0个参数
+
+119
+00:04:23,691 --> 00:04:25,024
+And in CollisionBehavior,
+在 CollisionBehavior 中
+
+120
+00:04:25,026 --> 00:04:27,259
+I'm going to talk about all of these behaviors you can do,
+我将会讨论所有你能做的行为
+
+121
+00:04:27,261 --> 00:04:30,161
+and you just add them with the method addBehavior
+你只需要使用 addBehavior 来添加它们
+
+122
+00:04:30,163 --> 00:04:31,229
+to your animator.
+到你的动画器（animator）中
+
+123
+00:04:31,231 --> 00:04:32,363
+Simple enough.
+足够简单了吧
+
+124
+00:04:32,365 --> 00:04:34,932
+And then you add the DynamicItems which are gonna
+随后你会在这之上添加 DynamicItem
+
+125
+00:04:34,934 --> 00:04:35,866
+be UIViews.
+它们应该是 UIView
+
+126
+00:04:35,868 --> 00:04:37,734
+Okay? UIDynamicItems
+明白了吗？
+
+127
+00:04:37,736 --> 00:04:39,736
+are really just a protocol I'm gonna talk about in a second,
+我等下会讲，UIDynamicItems 只是一个协议
+
+128
+00:04:39,738 --> 00:04:42,238
+but UIView implements that protocol.
+但是 UIView 实现了这个协议
+
+129
+00:04:42,240 --> 00:04:45,774
+But you just add these items using the method addItem on
+但是你目前不用管这些，你只需要用 UIDynamicBehavior 的 addItem
+
+130
+00:04:45,776 --> 00:04:47,575
+UIDynamicBehavior.
+把这些东西添加进来就可以了
+
+131
+00:04:47,577 --> 00:04:49,444
+So you see how I'm adding the items to the behavior.
+这样你就可以看到我时如何给 item 添加行为的
+
+132
+00:04:49,446 --> 00:04:51,278
+So you don't add the items to the animator,
+不是把这些东西添加到动画器中
+
+133
+00:04:51,280 --> 00:04:52,613
+you add the items to the behavior.
+而是将这些东西添加到行为中
+
+134
+00:04:52,615 --> 00:04:55,215
+You add the behaviors to the animator.
+然后把行为添加到动画器里
+
+135
+00:04:55,217 --> 00:04:57,000
+Okay?
+明白了吗？
+
+136
+00:04:57,001 --> 00:04:58,784
+So in this case up here, item1,
+在这里，item1
+
+137
+00:04:58,787 --> 00:05:02,955
+I added it to gravity and collider.
+我把它添加给了 gravity 和 collider
+
+138
+00:05:02,957 --> 00:05:05,124
+So item1 is going to be affected by the gravity,
+所以 item1 将会受其他对象的重力
+
+139
+00:05:05,126 --> 00:05:07,659
+and it's also going to collide with whatever
+和碰撞的设置所影响
+
+140
+00:05:07,661 --> 00:05:09,227
+the collider sets up.
+
+141
+00:05:09,229 --> 00:05:11,295
+Item2, is affected by the gravity, but
+item2 将会受其他对象的重力所影响
+
+142
+00:05:11,297 --> 00:05:13,397
+it will not collide with whatever's in the collider.
+但是不会受到碰撞效果的影响
+
+143
+00:05:13,399 --> 00:05:15,933
+It also won't collide with item1, they would pass right
+item2 不会与 item1 相碰撞，它们会相互穿过彼此
+
+144
+00:05:15,935 --> 00:05:18,869
+through each other, because it's not part of the collider.
+因为这不受碰撞效果的影响
+
+145
+00:05:18,871 --> 00:05:21,171
+Okay, so if you want things to interact with each other,
+所以，如果你想要这两者相互产生互动的话
+
+146
+00:05:21,173 --> 00:05:22,839
+they have to both be a part of the same behavior.
+它们都必须添加到一个相同的行为
+
+147
+00:05:25,109 --> 00:05:28,043
+Okay, that protocol is talking about UIDynamicItems
+好的，这个协议讲的是 UIView
+
+148
+00:05:28,045 --> 00:05:29,811
+that UIView implements.
+实现的 UIDynamicItems
+
+149
+00:05:29,813 --> 00:05:34,415
+It just has three properties, actually, bounds.
+它有三个属性，bounds
+
+150
+00:05:34,417 --> 00:05:35,983
+This is read-only, so
+这个属性是只读的
+
+151
+00:05:35,985 --> 00:05:40,320
+the animator cannot animate the size of something.
+动画器无法改变一个东西的大小
+
+152
+00:05:40,322 --> 00:05:41,755
+Okay? Because
+这是因为
+
+153
+00:05:41,756 --> 00:05:43,189
+the bounds part of the protocol is read-only.
+这个协议实现的 bounds 部分是只读的
+
+154
+00:05:44,292 --> 00:05:46,959
+So the two animatable properties are the center, so
+另外两个可以被动画改变的属性是，center
+
+155
+00:05:46,961 --> 00:05:48,193
+that's the position of the thing.
+这定义了一个对象的位置
+
+156
+00:05:48,195 --> 00:05:50,362
+So you can see animators moving things all over
+你可以看到动画效果将对象的位置移动来移动去
+
+157
+00:05:50,364 --> 00:05:52,263
+the place, that's mostly what they do.
+这也就是常用的一些动画
+
+158
+00:05:52,265 --> 00:05:55,700
+And then also a transform, which is AffineTransform.
+还有一个 transform 属性，它是 AffineTransform 类型的
+
+159
+00:05:55,702 --> 00:05:57,601
+Now notice that view UIView already have
+现在，注意到 UIView 已经拥有了这三个属性
+
+160
+00:05:57,603 --> 00:05:59,703
+all three of these properties, so you didn't even have to
+你不需要做任何事情去实现这个协议了
+
+161
+00:05:59,705 --> 00:06:01,271
+do anything to implement this protocol.
+
+162
+00:06:02,374 --> 00:06:03,406
+That AffineTransform,
+我顺便说一下，这里的 AffineTransform
+
+163
+00:06:03,408 --> 00:06:05,141
+by the way, is only used for rotation.
+是用于旋转的
+
+164
+00:06:06,077 --> 00:06:08,777
+So basically, the animator can rotate the view, or
+大致你可以理解为，这个动画器能够旋转这个视图
+
+165
+00:06:08,779 --> 00:06:10,211
+he can position it.
+或者重新定位这个视图
+
+166
+00:06:10,213 --> 00:06:13,147
+That's something that the animator can do.
+这就是动画器能够做到
+
+167
+00:06:13,149 --> 00:06:16,684
+Okay, now if you change the center or the transform,
+好的，现在，如果你想改变一个视图的中心或者使其变形
+
+168
+00:06:16,686 --> 00:06:18,285
+like you change the frame or
+就像你改变了视图的 frame 或
+
+169
+00:06:18,287 --> 00:06:20,654
+the center of the view to move it and
+视图的中心使其移动位置
+
+170
+00:06:20,656 --> 00:06:23,423
+the animator has a hold of it, you gotta tell the animator
+你告诉拥有这个对象的动画器
+
+171
+00:06:23,425 --> 00:06:26,459
+you did that by calling updateItemUsingCurrentState.
+你使用一个叫做 updateItemUsingCurrentState 的方法
+
+172
+00:06:26,461 --> 00:06:28,060
+You just pass the view.
+传入视图
+
+173
+00:06:28,062 --> 00:06:29,278
+Okay?
+明白了吗？
+
+174
+00:06:29,279 --> 00:06:30,495
+And so the animator can say, oh, that thing moved.
+然后，动画器会知道，这个东西移动了
+
+175
+00:06:30,498 --> 00:06:32,064
+And it will update its internal state
+它会从开始的地方更新内部状态
+
+176
+00:06:32,066 --> 00:06:33,431
+to start from wherever that thing is.
+无论这个东西的位置是哪里
+
+177
+00:06:33,433 --> 00:06:35,233
+Does that make sense?
+我这么说能明白吗？
+
+178
+00:06:35,235 --> 00:06:38,069
+Obviously, if you and the animator are fighting over
+显然的，你和动画器正在争抢
+
+179
+00:06:38,071 --> 00:06:41,638
+who's positioning a view, you have to at least communicate,
+重新定位一个视图的所有权，你需要协调好这个
+
+180
+00:06:41,640 --> 00:06:42,973
+and this is how you do it.
+上面的就是你如何做的过程
+
+181
+00:06:42,975 --> 00:06:43,673
+Okay?
+明白了吗？
+
+182
+00:06:43,675 --> 00:06:44,874
+Simple enough.
+就是如此的简单
+
+183
+00:06:44,876 --> 00:06:45,941
+All right. So let's talk about some of
+好的，让我们再谈谈另外的一些效果
+
+184
+00:06:45,943 --> 00:06:47,276
+these behaviors, the concrete behavior.
+凝聚（concrete）的行为
+
+185
+00:06:47,278 --> 00:06:50,479
+So gravity is very simple behavior.
+重力行为非常的简单
+
+186
+00:06:50,481 --> 00:06:52,147
+It just has an angle.
+就设置一个角度
+
+187
+00:06:52,149 --> 00:06:54,549
+So you can have the gravity be going up the screen or
+之后你就可以在屏幕上看到重力的效果
+
+188
+00:06:54,551 --> 00:06:56,751
+down the screen or to the left or to the right or
+无论是从左到右的重力效果还是
+
+189
+00:06:56,753 --> 00:06:59,820
+any angle you want, and it has a magnitude.
+你想要的任意的角度
+
+190
+00:06:59,822 --> 00:07:02,139
+Okay? So
+明白了吗？
+
+191
+00:07:02,140 --> 00:07:04,457
+the magnitude is in the scale where 1.0 is 1,000
+这里的大小（magnitude）的比例是 1.0:1000
+
+192
+00:07:04,460 --> 00:07:07,127
+points per second per second.
+1000 像素点每二次方秒
+
+193
+00:07:07,129 --> 00:07:08,912
+'Kay?
+
+194
+00:07:08,913 --> 00:07:10,696
+You all know that gravity is an acceleration.
+你们都知道重力是一种加速度
+
+195
+00:07:10,699 --> 00:07:13,199
+The acceleration due to gravity on Earth is 9.8
+这个加速度在地球上是 9.8 米每平方秒
+
+196
+00:07:13,201 --> 00:07:15,000
+meters per second squared.
+
+197
+00:07:15,002 --> 00:07:18,837
+And the acceleration due to gravity in these behaviors is
+这里的重力加速度是 1000 点每平方米秒
+
+198
+00:07:18,839 --> 00:07:21,572
+1,000 points per second squared.
+
+199
+00:07:21,574 --> 00:07:23,240
+'Kay? You can also set this
+明白了吗？当然你可以用一个向量设置
+
+200
+00:07:23,242 --> 00:07:25,109
+as a vector, but angle and magnitude
+但是角度和大小
+
+201
+00:07:25,111 --> 00:07:27,144
+are probably the easiest way to understand this.
+会是一个最简单的弄懂它的方法
+
+202
+00:07:27,146 --> 00:07:29,079
+So you just set the gravity.
+只要设置好重力
+
+203
+00:07:29,080 --> 00:07:31,013
+Now any item you add will start accelerating in
+任意的对象在这个方向上就有一个加速度
+
+204
+00:07:31,016 --> 00:07:31,948
+that direction.
+
+205
+00:07:31,950 --> 00:07:33,500
+The instance you add it,
+你添加的那个实例
+
+206
+00:07:33,501 --> 00:07:35,051
+it's gonna start accelerating in that direction,
+会在这个方向上有一个加速度
+
+207
+00:07:35,053 --> 00:07:37,319
+just like gravity were pulling on it.
+就好像重力正在拉它的样子
+
+208
+00:07:37,321 --> 00:07:38,820
+'Kay?
+
+209
+00:07:38,822 --> 00:07:40,622
+Then there's attachment behaviors.
+还有一些附属（attachment）行为的动画效果
+
+210
+00:07:40,624 --> 00:07:43,891
+So attachments you can attach two items, or
+对于附属行为，你可以添加两个对象
+
+211
+00:07:43,893 --> 00:07:46,994
+you can attach an item to an anchor point.
+或者将这两个对象添加到同一个锚点
+
+212
+00:07:46,996 --> 00:07:49,163
+Okay? That item still going to be
+明白了吗？这个东西仍旧会被其他的动作所影响
+
+213
+00:07:49,165 --> 00:07:52,733
+affected by all the other behaviors like gravity, so
+比如说重力
+
+214
+00:07:52,735 --> 00:07:54,167
+if I attached a view.
+但是，当我将一个视图，附属
+
+215
+00:07:54,169 --> 00:07:56,235
+To an anchor point, like this.
+到一个锚点，就像这样
+
+216
+00:07:56,237 --> 00:07:57,970
+And there was gravity on the view.
+由于这个视图上有重力的影响
+
+217
+00:07:57,972 --> 00:07:59,805
+It would swing down like this and
+它会像这样摆动下来
+
+218
+00:07:59,807 --> 00:08:02,140
+stop if there was gravity down, right?
+然后停止，就像重力的作用那样
+
+219
+00:08:02,142 --> 00:08:03,408
+'Cuz the gravity would be pulling it down.
+因为重力正在拉这个视图
+
+220
+00:08:03,410 --> 00:08:05,243
+But the attachment would be holding onto it.
+但是附属却是保持的效果
+
+221
+00:08:05,245 --> 00:08:07,478
+Does that make sense?
+我这么说能明白吗？
+
+222
+00:08:07,480 --> 00:08:08,846
+So the attachment basically.
+所以说，附属的行为基本上是
+
+223
+00:08:08,848 --> 00:08:10,814
+But it's like a bar that's attached.
+好比附着在一个栏（bar）上
+
+224
+00:08:10,816 --> 00:08:12,982
+That bar could be springy also.
+这个栏是有弹性的
+
+225
+00:08:12,984 --> 00:08:15,685
+So if it was a springy bar attachment, then the gravity
+如果是附属在一个弹性的栏上，那么重力会把这个视图向下拉
+
+226
+00:08:15,687 --> 00:08:18,087
+would pull it down, and it would spring like this.
+然后这个视图会在栏附近弹来弹去
+
+227
+00:08:19,090 --> 00:08:20,288
+So you can get a little springy and
+你可以得到一个小小的弹性效果
+
+228
+00:08:20,290 --> 00:08:24,292
+you can control the dampening and all that as well.
+而且你可以控制这个弹性效果反馈的程度
+
+229
+00:08:24,294 --> 00:08:25,893
+You can also control the distance between
+同样可以控制这两个东西之间的距离
+
+230
+00:08:25,895 --> 00:08:28,095
+those two things.
+
+231
+00:08:28,096 --> 00:08:30,296
+By the way, that distance is settable while it's animating,
+顺便说一句，这个距离在进行动画的时候还是可以设置的
+
+232
+00:08:30,299 --> 00:08:31,932
+so this thing might be pulling down and
+比方说，这个东西正在被往下拉的时候
+
+233
+00:08:31,934 --> 00:08:33,500
+you might be changing the length and
+你改变了它的长度
+
+234
+00:08:33,502 --> 00:08:34,901
+it might swing way down and
+这样它就会向下摆动
+
+235
+00:08:34,903 --> 00:08:36,635
+then you might pull it back up.
+接着，你有可能向上拉动了一下，它就会向上摆动
+
+236
+00:08:36,637 --> 00:08:38,404
+So you can control all this stuff.
+你可以控制这一切
+
+237
+00:08:38,406 --> 00:08:40,389
+All these things like that,
+类似这样的东西
+
+238
+00:08:40,390 --> 00:08:42,373
+even the anchor point can move while it's animating.
+甚至说是，锚点在进行动画的时候都是可以被改变的
+
+239
+00:08:42,376 --> 00:08:44,642
+And we're gonna actually do that in the demo.
+我们会在 Demo 里实现一下
+
+240
+00:08:44,644 --> 00:08:47,879
+So it's incredibly flexible what you can do when you
+所以在动画进行的过程中
+
+241
+00:08:47,881 --> 00:08:51,148
+can change the attributes of these behaviors on the fly,
+这些属性都是非常自由可调节的
+
+242
+00:08:51,150 --> 00:08:53,750
+while things are happening with gestures or whatever.
+当涉及到手势或者其他类似的东西时
+
+243
+00:08:55,620 --> 00:08:57,854
+Collision behavior is an awesome behavior.
+碰撞效果就非常起作用了
+
+244
+00:08:57,856 --> 00:08:59,588
+You're gonna use that very often.
+你会在之后频繁地使用它
+
+245
+00:09:01,058 --> 00:09:04,593
+It can basically control collisions between items.
+它能够控制对象之间的碰撞
+
+246
+00:09:04,595 --> 00:09:07,328
+And also, between items and a boundary.
+还可以控制对象和一个边界之间的碰撞
+
+247
+00:09:07,330 --> 00:09:09,197
+And you can set up as many boundaries as you want.
+这里的意思是，你可以设置类似的多个边界
+
+248
+00:09:09,199 --> 00:09:10,882
+So, for your assignment five,
+所以，你们的作业五
+
+249
+00:09:10,883 --> 00:09:12,566
+where you're gonna be doing this brickout game or
+你会做一个叫 Brickout 或者是 Breakout 的游戏
+
+250
+00:09:12,568 --> 00:09:13,734
+breakout game.
+
+251
+00:09:13,736 --> 00:09:15,669
+You're probably gonna wanna use boundaries for
+你大概会为你的砖头用到边界这个属性
+
+252
+00:09:15,671 --> 00:09:17,137
+all your bricks.
+
+253
+00:09:17,139 --> 00:09:19,706
+You're not gonna, they'll be UI views cuz you've got to
+由于它们是 UIView，所以你需要手动绘制出它们
+
+254
+00:09:19,708 --> 00:09:22,575
+draw them, but you won't be having those UI views
+但是你不希望这些视图参与到碰撞效果之中去
+
+255
+00:09:22,577 --> 00:09:25,244
+participate in the collisions, cuz then the bricks would
+因为这些砖最后会相互之间飞来飞去，满屏幕都是
+
+256
+00:09:25,246 --> 00:09:27,379
+start flying into each other, all over the place.
+
+257
+00:09:27,381 --> 00:09:29,981
+You just want them to kind of be fixed boundaries, so
+你想要的，应该是一个固定的边界
+
+258
+00:09:29,983 --> 00:09:31,215
+that when the ball hits them,
+当球击中它们的时候
+
+259
+00:09:31,217 --> 00:09:34,151
+then that view animates itself disappearing, okay?
+某个砖的边界才会消失，然后触发碰撞效果，明白了吗？
+
+260
+00:09:35,454 --> 00:09:37,587
+So the way you set these boundaries,
+所以你设置这些边界
+
+261
+00:09:37,589 --> 00:09:39,088
+there's really two ways.
+这里会有两个方法
+
+262
+00:09:39,090 --> 00:09:43,759
+One is you can set a Bezier path, any Bezier path, and it
+一个是，你可以设置一个 UIBezierPath，任意一种贝塞尔曲线
+
+263
+00:09:43,761 --> 00:09:46,795
+will use that Bezier path as the outer edges of a boundary.
+然后，它会使用这个贝塞尔曲线当作它的外部边界
+
+264
+00:09:46,797 --> 00:09:48,513
+'Kay.
+明白了吗？
+
+265
+00:09:48,514 --> 00:09:50,230
+It could be a rectangle or a circle, could be a line.
+它可以是一个矩形或者是一个圆形，甚至是一条直线
+
+266
+00:09:50,233 --> 00:09:53,067
+And you just, things that hit the line bounce off of it.
+你只需要，当东西碰到它的时候，弹回去
+
+267
+00:09:54,270 --> 00:09:57,171
+Or you can set this translatesReferenceBoundsInto-
+或者你可以设置 translatesReferenceBoundsIntoBoundary
+
+268
+00:09:57,173 --> 00:10:00,307
+Boundary, set that to true, and then the outer edges
+方法，设置它为真，然后
+
+269
+00:10:00,309 --> 00:10:03,777
+of the animated reference view will be a boundary.
+动画对象的所有的外边框，就会变成一个边界
+
+270
+00:10:03,779 --> 00:10:05,712
+Now, you can't use that for your homework,
+你在你的作业中不能使用它
+
+271
+00:10:05,713 --> 00:10:07,646
+because of course, the bottom one has to fall through.
+因为，最底下的那个砖必须是掉下来的
+
+272
+00:10:07,649 --> 00:10:10,616
+If your bouncing ball gets past the paddle, it falls off.
+如果你的球穿过去了，它会掉下来
+
+273
+00:10:11,618 --> 00:10:13,051
+So you'll have to use lines.
+这里你只能使用贝塞尔曲线中的线段
+
+274
+00:10:13,053 --> 00:10:14,485
+Bezier curve that's line two,
+线段的贝塞尔曲线
+
+275
+00:10:14,487 --> 00:10:17,588
+line two, line two or whatever.
+
+276
+00:10:17,590 --> 00:10:19,523
+Okay? When you add a boundary
+明白了吗？当你添加一个边界的时候
+
+277
+00:10:19,525 --> 00:10:21,024
+you give it an identifier.
+你要给它一个标识符
+
+278
+00:10:21,026 --> 00:10:23,927
+Now, that identifier is an NSCopying.
+这里的标识符是一个遵循 NSCopying 协议的对象
+
+279
+00:10:23,929 --> 00:10:28,764
+So NSCopying is a protocol that is implemented by
+NSCopying 是一个协议，被 NSString
+
+280
+00:10:28,766 --> 00:10:33,835
+NSString, NSNumber,
+NSNumber 所实现的
+
+281
+00:10:33,837 --> 00:10:36,538
+things like that, so that means String and
+其他的类也可能实现了这个协议，但是这代表
+
+282
+00:10:36,540 --> 00:10:39,840
+Int/Double also can be used as the identifier for a boundary.
+String 类型和 Int/Double 类型都可以作用一个边界的标识符
+
+283
+00:10:40,910 --> 00:10:44,177
+So when you hit a boundary you get this message.
+当你触碰到一个边界的时候，你会得到这个消息
+
+284
+00:10:44,179 --> 00:10:46,780
+You want to se yourself to be the UI collision behaviors
+你想要在碰撞的行为中设置你自己为代理
+
+285
+00:10:46,782 --> 00:10:48,832
+delegate.
+
+286
+00:10:48,833 --> 00:10:50,883
+And when a boundary is hit, it will send this message,
+当一个边界被触及的时候，它会发送这个消息
+
+287
+00:10:50,885 --> 00:10:52,418
+it actually has a few other messages,
+事实上，还有另外一些消息代理可以发送的
+
+288
+00:10:52,420 --> 00:10:55,954
+to its delegates saying, there was a collision
+当一个对象和一个边界发生碰撞的时候
+
+289
+00:10:55,956 --> 00:10:59,091
+between an item and a boundary or between two items.
+或者是两个对象之间发生的时候
+
+290
+00:10:59,093 --> 00:11:02,260
+And it's going to pass back that boundary identifier.
+代理将会传递这个标识符
+
+291
+00:11:02,262 --> 00:11:03,628
+You see that boundary identifier, so
+你看到这里第三个参数了吗？
+
+292
+00:11:03,630 --> 00:11:04,962
+the third argument there in this
+“边界的标识符”（BoundaryIdentifier）
+
+293
+00:11:04,964 --> 00:11:08,365
+method that it's gonna call in its delegate, and
+它会在代理中去调用这个东西
+
+294
+00:11:08,367 --> 00:11:11,468
+you have to cast that thing, cuz it'll be an NSCopying.
+因为这是一个遵循 NSCopying 协议的对象，所以你需要做一个类型转换
+
+295
+00:11:11,470 --> 00:11:13,403
+So you got to cast it to be a string or number or
+所以你将它转换成一个字符串或者是一个数字
+
+296
+00:11:13,405 --> 00:11:16,039
+whatever you put in, cast it to be that back.
+这么说吧，你设置标识符的参数是什么类型的，这里你就转换成什么类型的
+
+297
+00:11:16,041 --> 00:11:17,457
+Okay?
+明白了吗？
+
+298
+00:11:17,458 --> 00:11:18,874
+So it's a little small thing to understand is that
+这里你需要明白一点点类型转换的东西
+
+299
+00:11:18,876 --> 00:11:20,576
+casting behavior.
+
+300
+00:11:20,578 --> 00:11:22,611
+Okay?
+
+301
+00:11:22,612 --> 00:11:24,645
+So that's simple collisions.
+这是简单的碰撞效果
+
+302
+00:11:26,449 --> 00:11:29,150
+The snap behavior is used a lot in UI.
+在用户交互中，Snap 行为经常被使用到
+
+303
+00:11:29,152 --> 00:11:31,185
+You won't be using this in your homework but
+但是你在这个作业中并不会使用到它
+
+304
+00:11:31,187 --> 00:11:33,437
+it's actually used a lot.
+但在其他地方，它经常会被使用
+
+305
+00:11:33,438 --> 00:11:35,688
+It's essentially, you could imagine that you set up four
+而且是很基本的。
+
+306
+00:11:35,691 --> 00:11:40,426
+springs on the corner of a view in a new location.
+你可以想象，你在屏幕的四个角设置了弹性效果
+
+307
+00:11:40,428 --> 00:11:43,662
+The thing will fly to that space
+当这个对象移动到空间的另外一个位置的时候
+
+308
+00:11:43,664 --> 00:11:45,597
+in the middle of the four springs and
+发生了碰撞
+
+309
+00:11:45,599 --> 00:11:47,833
+then the springs will kind of oscillate.
+然后这个弹性效果就会触发类似于震荡一样的效果
+
+310
+00:11:47,835 --> 00:11:49,134
+So snap behavior is basically,
+举例说，Snap 行为
+
+311
+00:11:49,136 --> 00:11:52,170
+move to here, with a little bit of oscillation.
+移到某个地方，发生了碰撞
+
+312
+00:11:52,172 --> 00:11:54,171
+Okay, boing, kind of snapping.
+然后震荡。这就是 Snap 行为
+
+313
+00:11:54,173 --> 00:11:55,456
+Okay, but
+明白了吗？
+
+314
+00:11:55,457 --> 00:11:56,740
+snapping in a way that doesn't disconcert the user,
+但是 Snap 行为在某种程度上说，它并不会让用户分心
+
+315
+00:11:56,742 --> 00:11:59,026
+where things just like, moving.
+因为东西就像，移动
+
+316
+00:11:59,027 --> 00:12:01,311
+It flies across the screen, and then wiggles a little bit.
+然后摇动了一下下
+
+317
+00:12:01,313 --> 00:12:03,296
+So let the user know,
+所以，用户知道
+
+318
+00:12:03,297 --> 00:12:05,280
+there's a little thing just got positioned here.
+东西已经到了这个位置了
+
+319
+00:12:05,283 --> 00:12:07,850
+So, you just specify the point you want it to snap to, and
+实现这个，你只需要指定你想要 Snap 到的点
+
+320
+00:12:07,852 --> 00:12:10,519
+the item you want to snap, and it will zoom over there.
+以及，哪个对象你想要产生 Snap 动作，就够了
+
+321
+00:12:10,521 --> 00:12:13,489
+Okay, and you can control how much the springs spring.
+同样你可以控制这个震荡的效果
+
+322
+00:12:13,491 --> 00:12:15,857
+Is it a big movement or just kinda a small movement?
+是一个比较大的振幅呢还是一个比较小的振幅
+
+323
+00:12:15,859 --> 00:12:18,493
+You can control the damping with that
+通过同样设置这里的 damping 属性
+
+324
+00:12:18,495 --> 00:12:19,293
+property there, damping.
+
+325
+00:12:19,295 --> 00:12:22,329
+Then there's a push behavior.
+另外，还有一个 Push 行为
+
+326
+00:12:22,331 --> 00:12:26,900
+A push behavior means push on this thing in a certain
+一个 Push 行为，代表的意思是，把这个东西推向一个特定的角度
+
+327
+00:12:26,902 --> 00:12:31,437
+angle and magnitude, kind of like gravity.
+或者是一个力度，有点类似于重力
+
+328
+00:12:31,439 --> 00:12:32,738
+The big difference between push and
+但是 Push 和重力效果最大的区别就是
+
+329
+00:12:32,740 --> 00:12:34,440
+gravity, two differences.
+两个地方
+
+330
+00:12:34,442 --> 00:12:37,609
+One, a push can be a one time push, all right.
+一个是，Push 行为可以是一个一次性的效果
+
+331
+00:12:37,611 --> 00:12:41,413
+Just instantaneous push, or it can be a continuous push
+也可以是一个持续性、连续的效果
+
+332
+00:12:41,415 --> 00:12:44,048
+which is not like gravity cuz it's not accelerating.
+不像重力的地方是，它并不会加速
+
+333
+00:12:44,050 --> 00:12:46,584
+It's just a continuous velocity.
+它是以一个恒定的速度
+
+334
+00:12:46,586 --> 00:12:47,551
+Okay? You understand the difference
+明白了吗？
+
+335
+00:12:47,553 --> 00:12:49,686
+between acceleration and velocity.
+你明白加速度和速度之间的区别吗？
+
+336
+00:12:49,688 --> 00:12:52,789
+So push would be, if you had a continuous push it would be
+如果你有一个持续性的 Push 行为
+
+337
+00:12:52,791 --> 00:12:55,591
+a constant velocity.
+那么被 Push 的对象会有一个恒定的速度
+
+338
+00:12:55,593 --> 00:12:56,892
+Okay?
+
+339
+00:12:56,894 --> 00:12:59,962
+Now one thing about push behavior that's interesting is
+另外一个关于 Push 行为的很有意思的事情是
+
+340
+00:12:59,964 --> 00:13:02,764
+when you push, you add this behavior to your animator,
+当你 Push 的时候，你把这个行为添加到你的动画器中
+
+341
+00:13:02,766 --> 00:13:06,134
+it'll cause the items that are in it to be pushed.
+它会影响所有被添加到这个动画器里的东西
+
+342
+00:13:06,136 --> 00:13:07,902
+And then it just kind of sits around there.
+然而它并没有任何实质性的功能
+
+343
+00:13:07,904 --> 00:13:10,071
+Wasted if it's not a continuous push.
+白白占用我们的资源，如果它不是一个持续性的 Push 行为的话
+
+344
+00:13:10,073 --> 00:13:12,106
+And sits there, wasting memory.
+
+345
+00:13:12,107 --> 00:13:14,140
+And I'm going to talk about in a few slides how we can
+我会在之后的一些幻灯片中谈到这个问题
+
+346
+00:13:14,143 --> 00:13:15,575
+get that memory back.
+如何拿回这些占用的资源
+
+347
+00:13:15,577 --> 00:13:18,478
+Okay, and we'll have to do a little memory cycle
+好的，这里我们还需要做一个小小的内存循环保护
+
+348
+00:13:18,480 --> 00:13:20,297
+protection there.
+
+349
+00:13:20,298 --> 00:13:22,115
+Now, there's a special kind of behavior,
+有一种非常特别的行为
+
+350
+00:13:22,117 --> 00:13:23,783
+called a dynamic item behavior.
+称作动态对象行为
+
+351
+00:13:23,785 --> 00:13:26,118
+Don't be confused by dynamic behavior,
+不要被动态行为（Dynamic Behavior）这个词所迷惑
+
+352
+00:13:26,120 --> 00:13:28,286
+which is the super class of all behaviors.
+这是所有行为的父类
+
+353
+00:13:28,288 --> 00:13:29,854
+And dynamic item behavior,
+动态行为
+
+354
+00:13:29,856 --> 00:13:35,126
+which is a sub-class of UIDynamicBehavior.
+本身是一个 UIDynamicBehavior 的子类
+
+355
+00:13:35,128 --> 00:13:37,928
+Item behavior says how does this item or
+对象行为描述了被添加这个行为的对象
+
+356
+00:13:37,930 --> 00:13:39,830
+any of the items added to this behavior,
+或者是一些对象是怎么样的
+
+357
+00:13:39,832 --> 00:13:43,333
+how do they behave when other behaviors make them interact?
+它们会和另外的一些行为如何交互
+
+358
+00:13:43,335 --> 00:13:46,169
+So this is when something smashes into a wall in
+举例来说，如果一个东西撞到一个墙上
+
+359
+00:13:46,171 --> 00:13:50,973
+a collider, in a collision behavior, how springy is it?
+这是一个碰撞效果，然而它的弹性程度是怎么样的？
+
+360
+00:13:50,975 --> 00:13:51,640
+Can it spin?
+这个东西能够旋转吗？
+
+361
+00:13:52,642 --> 00:13:54,676
+Okay?
+
+362
+00:13:54,677 --> 00:13:56,711
+Or does it have to stay un-rotated?
+或者说，它是不是应该保持角度不做旋转？
+
+363
+00:13:56,713 --> 00:13:58,446
+Those kind of things
+如此如此的这一些东西
+
+364
+00:13:58,447 --> 00:14:00,180
+are all specified by this UIDynamicItemBehavior.
+都由这个 UIDynamicItemBehavior 所指定
+
+365
+00:14:00,183 --> 00:14:02,049
+So very often you'll have a gravity behavior,
+通常来说，你会有一个重力行为
+
+366
+00:14:02,051 --> 00:14:03,016
+a collider behavior.
+一个碰撞行为
+
+367
+00:14:03,018 --> 00:14:04,217
+You'll also have a dynamic
+你还会需要一个动态对象行为
+
+368
+00:14:04,219 --> 00:14:06,886
+item behavior to describe how much springiness is.
+来描述这个的弹性程度
+
+369
+00:14:06,888 --> 00:14:08,254
+You can, it also does density,
+你还可以描述密度
+
+370
+00:14:08,256 --> 00:14:10,389
+resistance, other things I haven't mentioned here.
+强度，或者另外一些这里我没有提及的东西
+
+371
+00:14:10,391 --> 00:14:11,623
+You can look in the documentation.
+都可以在文档里找到
+
+372
+00:14:11,625 --> 00:14:14,225
+But it's kind of all the things you would expect if you
+然而，当你需要一个物理引擎的时候，你才需要了解这些东西
+
+373
+00:14:14,227 --> 00:14:16,928
+had a physics-based engine, you need to set the kind of
+你需要设置所有这些属性
+
+374
+00:14:16,930 --> 00:14:20,464
+attributes, the physical attributes of an item.
+对象的物理属性
+
+375
+00:14:20,466 --> 00:14:23,367
+This dynamic item behavior also can report to you
+动态对象行为还可以告诉你
+
+376
+00:14:23,369 --> 00:14:26,870
+the current linear velocity and
+当前对象的线速度
+
+377
+00:14:26,872 --> 00:14:29,472
+angular velocity of this item.
+和角速度
+
+378
+00:14:29,474 --> 00:14:31,140
+So at any time, if you want to know,
+任意时刻都可以获取到
+
+379
+00:14:31,142 --> 00:14:34,076
+how fast is this thing moving and in what direction?
+这样你就可以知道这个东西移动多块、什么方向
+
+380
+00:14:34,078 --> 00:14:35,411
+You can get its linear velocity.
+通过获取其线速度
+
+381
+00:14:35,413 --> 00:14:37,079
+Or if you want to know how fast is this thing is
+而你可以知道这个东西是否在旋转
+
+382
+00:14:37,081 --> 00:14:39,981
+spinning, if at all, you can get its angular velocity.
+通过获取其角速度
+
+383
+00:14:41,051 --> 00:14:45,285
+And you can also add velocity to it in a certain direction.
+甚至说，你还可以在一个特定的方向上添加一个速度
+
+384
+00:14:45,287 --> 00:14:46,820
+So if you had something that was moving, and
+我们假想一下，你有一个正在移动的东西
+
+385
+00:14:46,822 --> 00:14:48,621
+you wanted to stop it, you could.
+你想让它停下，你可以添加一个反方向的速度
+
+386
+00:14:48,623 --> 00:14:50,723
+And then if you wanted to continue,
+如果你想要让停止的对象继续运动
+
+387
+00:14:50,725 --> 00:14:52,158
+you could add the velocity back.
+你把这个速度加回来
+
+388
+00:14:53,160 --> 00:14:55,193
+Just saying is all.
+就是如此
+
+389
+00:14:55,195 --> 00:14:56,428
+Okay.
+好的
+
+390
+00:14:56,429 --> 00:14:57,662
+So that's a dynamic behavior.
+这就是动态行为
+
+391
+00:14:57,664 --> 00:14:59,330
+Now, that's dynamic item behavior.
+现在，这是动态对象行为
+
+392
+00:14:59,332 --> 00:15:00,965
+Now here's UIDynamicBehavior.
+这里是 UIDynamicBehavior
+
+393
+00:15:00,967 --> 00:15:04,201
+This is the superclass of all of these behaviors.
+是所有这些行为的父类
+
+394
+00:15:04,203 --> 00:15:05,936
+And it's kind of an interesting superclass,
+这是一个很有趣的父类
+
+395
+00:15:05,938 --> 00:15:08,138
+because you can actually create a subclass.
+因为，你可以创建一个其子类
+
+396
+00:15:08,140 --> 00:15:10,773
+And in the invitation of the subclass you add
+在创建的子类中，你可以添加子行为
+
+397
+00:15:10,775 --> 00:15:12,942
+child behaviors, you add other behaviors so
+你可以添加其他的行为
+
+398
+00:15:12,944 --> 00:15:15,110
+you can have a composite behavior.
+这样你就可以拥有一个复合行为
+
+399
+00:15:15,112 --> 00:15:16,445
+This is very common to do.
+这是非常常见的做法
+
+400
+00:15:16,447 --> 00:15:18,297
+When you have three or
+当在一个相同集合的对象中
+
+401
+00:15:18,298 --> 00:15:20,148
+four different behaviors all working on the same set
+你想对它们所有添加三个或者是四个的行为
+
+402
+00:15:20,150 --> 00:15:20,782
+of items.
+
+403
+00:15:20,784 --> 00:15:22,667
+A lot of times,
+经常
+
+404
+00:15:22,668 --> 00:15:24,551
+you'll create a subclass in UI dynamic behavior, and in
+你会选择创建一个 UIDynamicBehavior 的子类
+
+405
+00:15:24,554 --> 00:15:28,088
+the init method, you'll call this method addChildBehavior,
+在初始化方法中，你调用这个方法 addChildBehavior
+
+406
+00:15:28,090 --> 00:15:31,391
+and you'll add a gravity of collider, item behavior.
+你可以添加一个重力、碰撞或者是动态对象行为
+
+407
+00:15:31,393 --> 00:15:32,815
+You see what I mean?
+你知道我的意思了吗？
+
+408
+00:15:32,816 --> 00:15:34,238
+You'll add them as child behaviors.
+你可以将它们添加为子行为
+
+409
+00:15:34,239 --> 00:15:35,661
+And now, this behavior will do all the things that those
+现在，这个行为就达到所有你添加的行为的效果了
+
+410
+00:15:35,664 --> 00:15:36,295
+behaviors did.
+
+411
+00:15:38,032 --> 00:15:39,181
+Okay? So,
+明白了吗？
+
+412
+00:15:39,182 --> 00:15:40,331
+you'll have a kind of a big combined behavior.
+所以，你会拥有一个非常庞大的行为
+
+413
+00:15:40,334 --> 00:15:41,800
+And I'll do that in the demo, so
+我会在 Demo 里演示一下
+
+414
+00:15:41,802 --> 00:15:43,335
+you can see what that looks like.
+你可以知道具体是怎么操作的
+
+415
+00:15:43,337 --> 00:15:48,906
+All behaviors, know the dynamic animator they're in.
+接下来，所有的行为
+
+416
+00:15:48,908 --> 00:15:52,042
+And a behavior can only be in one dynamic animator at
+一次只能在一个动画器中
+
+417
+00:15:52,044 --> 00:15:53,644
+a time.
+
+418
+00:15:53,645 --> 00:15:55,245
+So it has a property called dynamicAnimator.
+这里有一个称作 dynamicAnimator 的属性
+
+419
+00:15:55,247 --> 00:15:56,646
+And it's read-only.
+只读的
+
+420
+00:15:56,648 --> 00:15:58,381
+And it will tell you.
+它会告诉你这些
+
+421
+00:15:58,383 --> 00:16:01,250
+You can ask a collider who's animating
+你可以询问一个碰撞行为谁正在进行动画效果
+
+422
+00:16:01,252 --> 00:16:03,919
+right now, and it will tell you that the dynamicAnimator
+它会返回给你正在动画的 dynamicAnimator
+
+423
+00:16:03,921 --> 00:16:05,020
+is animating it.
+
+424
+00:16:05,022 --> 00:16:08,123
+Also, all dynamic behaviors will be sent
+同样，当所有的动态行为被移动到另外一个不同的动画器中
+
+425
+00:16:08,125 --> 00:16:10,625
+the message will be moved to animator
+它们将会发送一个消息
+
+426
+00:16:10,627 --> 00:16:13,060
+when they are going to switch to a different animator.
+willMovedToAnimator
+
+427
+00:16:13,062 --> 00:16:15,696
+Especially this is switching form not having an animator
+尤其是从没有动画器中切换到有动画器的时候
+
+428
+00:16:15,698 --> 00:16:16,763
+to having one.
+
+429
+00:16:16,765 --> 00:16:19,632
+Or from having one to not having one anymore.
+或者是从有动画器中切换到没有动画器的时候
+
+430
+00:16:19,634 --> 00:16:21,067
+Okay?
+明白了吗？
+
+431
+00:16:21,069 --> 00:16:23,269
+That should be UIDynamicAnimator,
+这里会有一个问号，所以是一个可选类型的
+
+432
+00:16:23,271 --> 00:16:25,404
+question mark, that's an optional.
+UIDynamicAnimator
+
+433
+00:16:25,406 --> 00:16:27,172
+Okay? Cuz it might be said,
+明白了吗？因为我们可能会这么调用
+
+434
+00:16:27,174 --> 00:16:29,074
+will move to animator nil,
+willMoveToAnimator(nil)
+
+435
+00:16:29,076 --> 00:16:32,710
+which means you're being taken out of an animator.
+也就是说，我们从一个动画器中移除它
+
+436
+00:16:32,712 --> 00:16:36,847
+Okay, very important property on UIDynamicBehavior called
+在 UIDynamicBehavior 里，有一个非常重要的属性叫
+
+437
+00:16:36,849 --> 00:16:38,281
+action.
+action
+
+438
+00:16:38,283 --> 00:16:41,818
+Action is a function, takes no arguments, returns nothing.
+action 是一个没有参数的函数，并且不返回值
+
+439
+00:16:41,820 --> 00:16:46,722
+99.999% of the time it's set with a closure, okay?
+99.999% 的情况下，它通过一个闭包来设值
+
+440
+00:16:46,724 --> 00:16:50,492
+And this piece of code will be executed every time this
+然后，每次这个行为发生在其对象上的时候
+
+441
+00:16:50,494 --> 00:16:54,562
+behavior acts upon its items.
+这一小段代码都会执行
+
+442
+00:16:54,564 --> 00:16:55,813
+'Kay?
+
+443
+00:16:55,814 --> 00:16:57,063
+That means it's called a lot.
+这代表，这个方法会被多次调用
+
+444
+00:16:57,066 --> 00:16:58,365
+Okay?
+明白了吗？
+
+445
+00:16:58,367 --> 00:17:00,467
+Imagine a gravity behavior,
+想象一个重力行为
+
+446
+00:17:00,469 --> 00:17:03,737
+it's constantly accelerating something.
+它以一个恒定的加速度在加速一个对象
+
+447
+00:17:03,739 --> 00:17:05,371
+So it's constantly acting upon it.
+也就是说它持续地 “act”
+
+448
+00:17:05,373 --> 00:17:07,573
+So it's constantly gonna be calling this.
+所以它持续地调用这个方法
+
+449
+00:17:07,575 --> 00:17:09,475
+So whatever code you put here,
+无论你放在闭包里是什么样的代码，它都会持续调用
+
+450
+00:17:09,477 --> 00:17:12,778
+an action wants to be really efficient, okay?
+一个 action 要做到非常高效
+
+451
+00:17:12,780 --> 00:17:15,246
+It wants to be very small, very compact.
+同时长度需要非常短小精悍
+
+452
+00:17:15,248 --> 00:17:17,348
+This is a place to do some optimization,
+这里是需要做一些优化的
+
+453
+00:17:17,350 --> 00:17:19,216
+have a data structure where you can store things, so
+比如用一个数据结构去保存一些参数
+
+454
+00:17:19,218 --> 00:17:20,517
+you don't have to calculate things so much.
+以至于你不需要重新计算它们
+
+455
+00:17:20,519 --> 00:17:22,686
+Cuz this is going to get called a lot, all right?
+因为切记，这会被多次调用
+
+456
+00:17:22,688 --> 00:17:24,254
+And you'll want your animations to be smooth,
+你想要你的动画效果非常的顺畅
+
+457
+00:17:24,256 --> 00:17:27,090
+you don't want them to be bogged down with something
+你不希望它们在每一次交互的时候
+
+458
+00:17:27,092 --> 00:17:30,192
+heavy going on every single time it interacts, okay?
+都进行大量的运算，然后卡住不动了
+
+459
+00:17:31,762 --> 00:17:35,130
+One thing to be careful about this action method,
+关于 action 方法需要非常小心的一点是
+
+460
+00:17:35,132 --> 00:17:38,299
+is that it is a property on the behavior, so
+这是行为上的一个属性
+
+461
+00:17:38,301 --> 00:17:41,135
+if that action method's code refers to the behavior,
+所以如果 action 的代码里参考了这个行为的话
+
+462
+00:17:41,137 --> 00:17:43,437
+you're going to have a memory cycle, and
+你会形成一个 retain cycle
+
+463
+00:17:43,439 --> 00:17:46,173
+so you need to do that unowned thing,
+你需要将参考的类型编程 unowned
+
+464
+00:17:46,175 --> 00:17:49,743
+the capture list that we were taking about.
+我们在捕获列表里讨论过这个
+
+465
+00:17:49,745 --> 00:17:52,945
+You have to do that to break the memory cycle, this is
+你需要用捕获列表打破 retain cycle
+
+466
+00:17:52,947 --> 00:17:55,748
+the case where you've got a property on an object and
+这个技术通常是用于，当你对一个对象中有一个属性的时候
+
+467
+00:17:55,750 --> 00:17:58,050
+the implementation of the closure that you assign often
+而且你对这个属性赋值一个闭包，这个闭包的实现中你通常
+
+468
+00:17:58,052 --> 00:18:00,218
+refers back to the property.
+又参考这个属性本身
+
+469
+00:18:00,220 --> 00:18:01,686
+To the thing that the property is on,
+
+
+470
+00:18:01,688 --> 00:18:03,121
+so be careful about that,
+所以对这个小心点
+
+471
+00:18:03,123 --> 00:18:07,591
+let me show you a quick demo about that in a slide or two.
+这个我稍后会快速做一个 Demo 给你们了解一下
+
+472
+00:18:07,593 --> 00:18:10,327
+The UIDynamicAnimator, it also has a delegate.
+UIDynamicAnimator 同时拥有一个代理对象
+
+473
+00:18:10,329 --> 00:18:11,461
+Just like the CollisionBehavior
+就像碰撞行为一样
+
+474
+00:18:11,463 --> 00:18:13,796
+has a delegate, the animator has a delegate, and
+动画器有一个代理对象
+
+475
+00:18:13,798 --> 00:18:15,264
+it'll tell you only two things.
+它会告诉你两件事情
+
+476
+00:18:15,266 --> 00:18:19,068
+It'll tell you when the animation has reached stasis.
+首先，它会告诉你动画器是否已经停止
+
+477
+00:18:19,070 --> 00:18:23,505
+In other words, none of the behaviors need to do anything.
+换言之，没有另外的行为会继续产生了
+
+478
+00:18:23,507 --> 00:18:24,606
+Okay?
+明白了吗？
+
+479
+00:18:24,607 --> 00:18:25,706
+Nothing is happening in the animator.
+没有东西会在动画器中发生了
+
+480
+00:18:25,709 --> 00:18:27,608
+Everything is still, and
+所有的对象都是出于静止的状态
+
+481
+00:18:27,610 --> 00:18:30,210
+then it'll tell you when that's changed.
+同样的，当这些改变的时候，它同样会告诉你
+
+482
+00:18:30,212 --> 00:18:30,911
+Okay? And now, things
+当它告诉你的时候
+
+483
+00:18:30,913 --> 00:18:32,279
+are animating again.
+这代表，对象又动起来了
+
+484
+00:18:32,280 --> 00:18:33,646
+So every time it pauses, it'll tell you.
+所以，每一次动画暂停的时候，它都会告诉你
+
+485
+00:18:33,648 --> 00:18:35,782
+And then, every time it continues, it'll tell you.
+每一次动画继续的时候，它也会告诉你
+
+486
+00:18:35,784 --> 00:18:37,717
+So that way you can tell what's going on.
+通过这种方式，你能知道正在发生什么事情
+
+487
+00:18:39,854 --> 00:18:43,155
+When you design something that uses this stuff is,
+当你设计利用这个功能的时候
+
+488
+00:18:43,157 --> 00:18:45,557
+you want it to reach stasis.
+你想要它停止
+
+489
+00:18:45,559 --> 00:18:47,492
+You don't ever want it to be just constantly
+你不想要它始终在动画
+
+490
+00:18:47,494 --> 00:18:49,344
+animating, right?
+对吧？
+
+491
+00:18:49,345 --> 00:18:51,195
+You want it to try and reach stasis, if possible.
+你想要它在可能的情况下，达到静止状态
+
+492
+00:18:51,197 --> 00:18:53,130
+'Kay, now there might be cases where you actually
+另外，还有一种情况，这种情况下
+
+493
+00:18:53,132 --> 00:18:55,732
+are constantly animating, something's spinning, and
+你想要你的动画是持续性的，就像什么东西旋转一样
+
+494
+00:18:55,734 --> 00:18:57,534
+it's constantly spinning.
+你希望它一直保持旋转
+
+495
+00:18:57,536 --> 00:19:01,704
+Okay, but you wanna design the system, unless that's really
+你想要设计这个系统，除非你执意不要
+
+496
+00:19:01,706 --> 00:19:05,574
+what you intend, you don't want things, classic one is.
+不想要这些东西，你想用一个比较传统的做法
+
+497
+00:19:05,576 --> 00:19:07,476
+You have something with CollisionBehaviors.
+你有一些个碰撞效果
+
+498
+00:19:07,478 --> 00:19:10,779
+The thing flies off screen outside of the collision area,
+当对象越过屏幕边缘，越过碰撞区域的时候
+
+499
+00:19:10,781 --> 00:19:13,982
+and then now it's flying off into outer space, and
+他向外层的空间飞过去
+
+500
+00:19:13,984 --> 00:19:16,417
+it's gonna continue to animate forever
+它会持续动画，直到它飞过上千万的 point
+
+501
+00:19:16,419 --> 00:19:19,553
+as it flies billions of points away, okay.
+
+502
+00:19:19,555 --> 00:19:22,189
+It's never gonna stop, so you got to be careful about that.
+它永远不会停止，这是你需要关心的情况
+
+503
+00:19:22,191 --> 00:19:25,525
+When things go outside of the area that you're animating,
+当对象在你动画区域之外发生的时候
+
+504
+00:19:25,527 --> 00:19:27,127
+they don't stop animating.
+它们并不会停止动画
+
+505
+00:19:27,129 --> 00:19:29,195
+You need to notice that and
+你需要注意到这个问题
+
+506
+00:19:29,197 --> 00:19:32,064
+take that thing out of the behaviors, so that they're no
+然后你需要从这些对象上移除这些行为
+
+507
+00:19:32,066 --> 00:19:35,300
+longer being accelerated off into nowhere or whatever.
+好让它们不再被持续加速了
+
+508
+00:19:35,302 --> 00:19:36,134
+Okay?
+明白了吗？
+
+509
+00:19:36,135 --> 00:19:36,967
+So be careful about that.
+所以关心一下这个点
+
+510
+00:19:36,970 --> 00:19:38,536
+That can happen in your assignment, of course.
+在你们的作业中可能会发生这样的事情
+
+511
+00:19:38,538 --> 00:19:41,239
+Because the bouncing ball goes off the bottom,
+因为当一个弹性的小球越过底部的时候
+
+512
+00:19:41,241 --> 00:19:42,457
+it'll just keep going.
+它就会一直保持动画
+
+513
+00:19:42,458 --> 00:19:43,674
+Okay? Keep getting animated and
+一直一直
+
+514
+00:19:43,676 --> 00:19:45,209
+never reach stasis.
+永远不会达到一个停止的状态
+
+515
+00:19:45,211 --> 00:19:47,010
+Unless you notice that and
+除非你意识到这个问题
+
+516
+00:19:47,012 --> 00:19:49,079
+take the ball out of the view hierarchy probably.
+并且将小球从视图体系中移走
+
+517
+00:19:49,081 --> 00:19:50,780
+And also away from the behaviors.
+同样也从行为中移走
+
+518
+00:19:51,883 --> 00:19:55,651
+By the way, don't ever put a view into a behavior,
+这里我想另外说一句，永远不要将一个视图放在一个行为中
+
+519
+00:19:55,653 --> 00:19:59,254
+okay, when that view is not on the view hierarchy
+好的，当一个视图不在动画器的参考视图的视图体系中
+520
+00:19:59,256 --> 00:20:01,856
+of the reference view of the animator.
+
+521
+00:20:01,858 --> 00:20:04,292
+Obviously, the animator wants to animate the thing, and
+很明显的，动画器想要让某个对象动起来
+
+522
+00:20:04,294 --> 00:20:06,927
+if it's not in its view hierarchy, like it's in any
+如果某个对象不在它的视图体系中
+
+523
+00:20:06,929 --> 00:20:08,362
+view hierarchy or it's in a different one,
+比如某个对象在不同的一个视图体系中
+
+524
+00:20:08,364 --> 00:20:10,664
+the animator will basically crash your program and
+这个动画器就会使你的程序崩溃
+
+525
+00:20:10,666 --> 00:20:11,731
+I tried to animated something,
+永远不要对不在你的视图体系中的对象进行动画操作
+
+526
+00:20:11,733 --> 00:20:13,099
+it's not in my view hierarchy anywhere.
+
+527
+00:20:14,135 --> 00:20:16,051
+So don't do that.
+不要这么做
+
+528
+00:20:16,052 --> 00:20:17,968
+Also, don't animate things that are size 00.
+同样，不要对一个大小为 (0,0) 的对象动画
+
+529
+00:20:19,139 --> 00:20:20,216
+Okay.
+明白了吗？
+
+530
+00:20:20,217 --> 00:20:21,294
+It really doesn't make and
+这么做非常的不合理
+
+531
+00:20:21,295 --> 00:20:22,372
+sense to do that because it's not visible anyway,
+因为它并不是一个可见的对象
+
+532
+00:20:22,375 --> 00:20:23,607
+but don't do that.
+所以不要尝试这么做
+
+533
+00:20:23,609 --> 00:20:24,641
+Animator doesn't like that either.
+动画器也是如此
+
+534
+00:20:25,844 --> 00:20:29,279
+All right, quick sample here of memory cycle avoidance.
+好的，另外这里有一个 retain cycle 的样例
+
+535
+00:20:29,281 --> 00:20:31,647
+I was talking about that action method.
+还记得我之前讲过的 action 方法吗？
+
+536
+00:20:31,649 --> 00:20:34,016
+So here, I'm creating a pushBehavior, and
+这里，我创建一个 Push 行为
+
+537
+00:20:34,018 --> 00:20:35,217
+I told you the pushBehavior,
+我之前说过
+
+538
+00:20:35,219 --> 00:20:37,886
+if it's instantaneous, it just sits around.
+如果不是持续性的话会没有任何的效果
+
+539
+00:20:37,888 --> 00:20:39,587
+Because the way you make a push happen is
+你真正实现一个 Push 动画应该是
+
+540
+00:20:39,589 --> 00:20:42,123
+you create a pushBehavior, and you add it to an animator.
+创建一个 Push 行为，然后添加到一个动画器
+
+541
+00:20:42,125 --> 00:20:45,626
+As soon as you add it, it's gonna push any of its items.
+只要你一添加，它就会推动任何一个对象
+
+542
+00:20:45,628 --> 00:20:47,478
+Okay?
+明白了吗？
+
+543
+00:20:47,479 --> 00:20:49,329
+Well, after it's done, if it's an instantaneous push, not
+如果这个动画完成的话，如果这不是一个持续性的 Push
+
+544
+00:20:49,331 --> 00:20:51,631
+continuous, but instantaneous, well, it just sits there.
+这些东西就会停止
+
+545
+00:20:51,633 --> 00:20:53,266
+Cuz it's been added to the animator.
+但是由于 Push 行为被添加到了一个动画器
+
+546
+00:20:53,268 --> 00:20:54,767
+So it's just wasting space.
+所以它只会白白浪费空间
+
+547
+00:20:54,769 --> 00:20:58,237
+So one of the way you can do this is in the pushBehavior's
+有一个方法可以让你在 Push 行为中的 action 方法做的
+
+548
+00:20:58,239 --> 00:21:01,139
+action, which I told you is called whenever the behavior
+换言之，也就是每次这个行为在一个对象上被调用的时候
+
+549
+00:21:01,141 --> 00:21:02,707
+acts on something.
+
+550
+00:21:02,709 --> 00:21:06,144
+So after the pushBehavior acts and instantaneously pushes,
+所以当一个 Push 行为非持续性推动的时候
+
+551
+00:21:06,146 --> 00:21:09,280
+well, you could just remove the thing from its animator.
+你将它从一个动画器中移除
+
+552
+00:21:09,282 --> 00:21:11,782
+And I told you every behavior knows the animator it's in, so
+我告诉过你，每一个行为都知道它属于哪个动画器
+
+553
+00:21:11,784 --> 00:21:13,417
+that's easy you can just do that one
+所以这里并不难做到
+
+554
+00:21:13,419 --> 00:21:16,119
+line of code in yellow there, pushBehavior, dynamicAnimator,
+这里黄色行的代码，pushBehavior.dynamicAnimator!
+
+555
+00:21:16,121 --> 00:21:19,255
+removeBehavior, pushBehavior myself, okay.
+pushBehavior.dynamicAnimator!.removeBehavior(pushBehavior)
+
+556
+00:21:19,257 --> 00:21:22,658
+But in that closure, I'm referring to myself,
+在这个闭包中参考了对象自身
+
+557
+00:21:22,660 --> 00:21:25,327
+pushBehavior because removing myself, okay.
+即 pushBehavior
+
+558
+00:21:25,329 --> 00:21:27,329
+I'm also referring to myself because I'm getting my
+另外我参考自身是因为我正在获取我自己的 dynamicAnimator
+
+559
+00:21:27,331 --> 00:21:29,130
+own dynamicAnimator.
+
+560
+00:21:29,132 --> 00:21:30,765
+So this is bad.
+这样做是很糟的
+
+561
+00:21:30,766 --> 00:21:32,399
+This is gonna cause a memory cycle here because
+这会在闭包中产生一个 retain cycle
+
+562
+00:21:32,402 --> 00:21:34,235
+that action closure.
+
+563
+00:21:34,237 --> 00:21:36,470
+Right? It is gonna stay in memory,
+对吗？它会一直呆在内存里
+
+564
+00:21:36,472 --> 00:21:39,439
+because the action property is pointing to it.
+因为 action 属性指向了它
+
+565
+00:21:39,441 --> 00:21:41,808
+And this push behavior is gonna stay in memory,
+另外这个 Push 行为也会保留在内存中
+
+566
+00:21:41,810 --> 00:21:43,843
+because that closure is pointing to it.
+因为这个闭包正在指向它
+
+567
+00:21:43,845 --> 00:21:46,379
+So since they're both pointing to each other,
+当它们两个互相引用的时候
+
+568
+00:21:46,381 --> 00:21:47,780
+there's always gonna be a pointer to them.
+它们之间始终有一个指针指向对方
+
+569
+00:21:47,782 --> 00:21:49,748
+They'll always stay in memory forever.
+所以它们就会永远呆在内存中了
+
+570
+00:21:49,750 --> 00:21:52,017
+And I mean forever and ever.
+注意我这里用的词是“永远”
+
+571
+00:21:52,019 --> 00:21:53,017
+Okay? If you can't,
+明白了吗？
+
+572
+00:21:53,019 --> 00:21:54,318
+no way to get rid of them.
+没有打破这个循环引用关系的方式
+
+573
+00:21:54,320 --> 00:21:55,552
+So how do we fix that?
+如何修复这个问题？
+
+574
+00:21:55,554 --> 00:21:57,387
+We put that unowned in there.
+我们在这里写上 unowned
+
+575
+00:21:57,389 --> 00:22:00,323
+So we put this capture list here, say that pushBehavior
+我们在这里放置一个捕获列表
+
+576
+00:22:00,325 --> 00:22:04,627
+inside my closure is unowned, meaning don't capture it.
+表示，Push 行为在我的闭包中是不会被强引用的，所以不要捕获它
+
+577
+00:22:04,629 --> 00:22:07,596
+I promise that it will be there when you want to use it,
+“我保证这个指针在你想使用的时候都是有效且存在的”
+
+578
+00:22:07,598 --> 00:22:08,930
+Mr. Closure says.
+Mr. 闭包这么说
+
+579
+00:22:08,932 --> 00:22:11,800
+You do not have to capture it and keep it in memory.
+你不需要捕获并在内存中保存它
+
+580
+00:22:11,802 --> 00:22:13,518
+Okay? And we know that's fine.
+明白了吗？我们只要知道这么做没问题
+
+581
+00:22:13,519 --> 00:22:15,235
+Because obviously, the action wouldn't even be called if
+因为很明显的，如果视图的 Push 行为都不存在的时候
+
+582
+00:22:15,238 --> 00:22:16,604
+the view's pushBehavior didn't exist.
+action 永远不会被调用
+
+583
+00:22:16,606 --> 00:22:17,971
+So this is good.
+这就很不错
+
+584
+00:22:17,973 --> 00:22:19,006
+This code's for sure going to work.
+这段代码肯定能正常运行
+
+585
+00:22:20,175 --> 00:22:21,274
+Okay? You have to do this a lot
+你将来会在 action 中经常这么做
+
+586
+00:22:21,276 --> 00:22:22,408
+with actions.
+
+587
+00:22:22,409 --> 00:22:23,541
+And you'll probably have to do this in your assignment,
+另外你们可能会在你们的作业中会用到这个
+
+588
+00:22:23,544 --> 00:22:25,277
+when you use an action.
+
+589
+00:22:25,279 --> 00:22:27,446
+Okay? And I encourage you to try and
+我鼓励你去尝试
+
+590
+00:22:27,448 --> 00:22:29,080
+make your pushBehavior do this as well.
+并让你的 Push 行为这么做
+
+591
+00:22:29,082 --> 00:22:31,849
+It's not a required task, but get your pushBehavior to clean
+这不是一个必需的要求，但是这可以让你的 Push 行为
+
+592
+00:22:31,851 --> 00:22:33,517
+itself up after it's done pushing.
+在完成它的使命之后自己清理干净自己
+
+593
+00:22:34,920 --> 00:22:36,053
+All right, so let's do this demo.
+好的，让我们开始 Demo
+
+594
+00:22:39,458 --> 00:22:40,623
+Any questions about all that?
+对以上的东西还有什么疑问吗？
+
+595
+00:22:41,726 --> 00:22:43,359
+Again, feel free to interrupt me.
+再说一遍，请不要害怕打断我，勇敢提出问题
+
+596
+00:22:43,361 --> 00:22:46,561
+Coming up this week, Friday, we're going to learn
+这个周五，我们想要
+
+597
+00:22:46,563 --> 00:22:49,064
+about the Parse framework, which is a way to
+学习解析框架
+
+598
+00:22:49,066 --> 00:22:51,132
+basically store your data on the network.
+这是你处理网络数据的基础
+
+599
+00:22:52,769 --> 00:22:55,302
+So for if you're building some sort of final project, or
+如果你已经在着手做大作业了
+
+600
+00:22:55,304 --> 00:22:57,504
+you wanna back end or something,
+或者需要后端处理
+
+601
+00:22:57,506 --> 00:23:02,975
+Parse is really simple, nice asynchronous using blocks.
+Parse 是一个非常简单的，使用异步 block 
+
+602
+00:23:02,977 --> 00:23:04,944
+Closure's a way to do that.
+方式处理的
+
+603
+00:23:04,946 --> 00:23:06,011
+And then next week,
+下一周
+
+604
+00:23:06,013 --> 00:23:07,813
+we're gonna talk about a variety of topics.
+我们将讨论多个问题
+
+605
+00:23:07,815 --> 00:23:10,382
+We're finally gonna talk about modal segue way a little bit
+最后会讨论些模态的 segue
+
+606
+00:23:10,384 --> 00:23:11,916
+and the application life cycle.
+还有应用程序生命周期
+
+607
+00:23:12,919 --> 00:23:15,252
+And core motion,
+还有 Core Motion
+
+608
+00:23:15,253 --> 00:23:17,586
+which is the gyro and accelerometer and that stuff.
+陀螺仪，加速器之类的东西
+
+609
+00:23:18,890 --> 00:23:19,455
+Okay?
+
+610
+00:23:19,457 --> 00:23:22,892
+I believe we'll have just enough time for this demo.
+我认为剩下的时间够做这个 demo
+
+611
+00:23:22,894 --> 00:23:27,329
+If I run a little long, you guys know what to do.
+如果我时间花得久了些，你们知道该怎么做
+
+612
+00:23:27,331 --> 00:23:29,330
+So let's start here.
+从这开始
+
+613
+00:23:29,332 --> 00:23:30,465
+Create new project.
+创建一个新工程
+
+614
+00:23:31,467 --> 00:23:33,634
+We always use single view in this class,
+单视图应用
+
+615
+00:23:33,636 --> 00:23:34,868
+we'll call it DropIt.
+起名为 DropIt
+
+616
+00:23:34,870 --> 00:23:36,202
+We're dropping some things.
+我们将会往下掉落些东西
+
+617
+00:23:36,204 --> 00:23:38,838
+I'll put it in the same place we always put it.
+把它放在这里
+
+618
+00:23:38,840 --> 00:23:41,974
+Here we go.
+好了
+
+619
+00:23:41,975 --> 00:23:45,109
+Now I'm going to clean up this stuff.
+把工程清理一下
+
+620
+00:23:45,112 --> 00:23:47,979
+Okay, I don't need this view controller, I'm going to have
+我不需要这个视图控制器
+
+621
+00:23:47,981 --> 00:23:50,615
+a custom view controller, we're not gonna use the one.
+我需要一个自定义的
+
+622
+00:23:50,617 --> 00:23:52,216
+I don't like the name of this, I'm not gonna use.
+我不喜欢这个名字
+
+623
+00:23:52,218 --> 00:23:55,319
+This one.
+我不会用这个
+
+624
+00:23:55,320 --> 00:23:58,421
+My story board right here, I'm going to right off
+这个是 StoryBoard
+
+625
+00:23:58,424 --> 00:24:04,127
+the bat create a new subclass for my view controller.
+我现在新建一个视图控制器的子类
+
+626
+00:24:04,129 --> 00:24:05,995
+So it's going to be a UIViewController.
+类型是 UIViewController
+
+627
+00:24:05,997 --> 00:24:08,630
+I'm gonna call it DropitViewController.
+起名为 DropitViewController
+
+628
+00:24:10,934 --> 00:24:12,434
+Probably could have renamed that other thing.
+应该给它起个更好听的名字
+
+629
+00:24:12,436 --> 00:24:14,569
+It probably would have been just as good.
+不过这个也行
+
+630
+00:24:14,571 --> 00:24:16,037
+So here's Dropit.
+好了
+
+631
+00:24:16,039 --> 00:24:19,907
+I'm gonna get rid of all this in here.
+把这些去掉
+
+632
+00:24:19,909 --> 00:24:25,879
+In my storyboard, let's set the class here to be Dropit.
+在 storyboard 中，把类设置为 Dropit
+
+633
+00:24:25,881 --> 00:24:29,282
+The only UI that my Dropit is gonna have is a custom view,
+在 Dropit 中唯一的 UI 会是一个自定义视图
+
+634
+00:24:29,284 --> 00:24:32,685
+and actually, I'm gonna start out with a generic view.
+我先创建一个一般的视图
+
+635
+00:24:32,687 --> 00:24:34,853
+In your homework assignments, you might be able to get away,
+在作业里你们可能会用别的方式
+
+636
+00:24:34,855 --> 00:24:37,356
+depending on how you architect things, with the generic
+取决于你们怎样通过一般的视图来包含砖块还有球
+
+637
+00:24:37,358 --> 00:24:41,359
+view here to contain your bricks and bouncing ball.
+来搭建界面
+
+638
+00:24:41,361 --> 00:24:43,444
+So I'm going to have this.
+所以我使用一般视图
+
+639
+00:24:43,445 --> 00:24:45,528
+I'm gonna make sure that my constraints are set here.
+设置一下约束
+
+640
+00:24:45,531 --> 00:24:48,832
+So let's Reset to Suggested Constraints.
+使用建议的约束
+
+641
+00:24:48,834 --> 00:24:50,250
+I always like to check them,
+在这里检查一下
+
+642
+00:24:50,251 --> 00:24:51,667
+make sure there's no magic numbers or anything.
+确保没有任何魔法数字
+
+643
+00:24:51,670 --> 00:24:53,336
+That all looks good to me.
+看起来还可以
+
+644
+00:24:53,338 --> 00:24:58,574
+I'm gonna create a outlet to this thing, right there.
+为它创建 outlet
+
+645
+00:24:58,576 --> 00:25:01,910
+I'm gonna call that my game view, so this is going to be
+把它叫做 gameView
+
+646
+00:25:01,912 --> 00:25:04,746
+the view that contains my little Dropit game.
+这就是包含 Dropit 这个小游戏的 View
+
+647
+00:25:04,748 --> 00:25:08,049
+It's not much of a game, but kind of a game.
+算不上游戏，但也有点游戏的意思
+
+648
+00:25:08,051 --> 00:25:09,450
+All right, so there we go.
+好的
+
+649
+00:25:09,452 --> 00:25:12,653
+So, what is my Dropit going to do here?
+Dropit 将要做些什么呢
+
+650
+00:25:12,655 --> 00:25:18,191
+It's going to, along the top of my view, I'm
+在视图的顶部
+
+651
+00:25:18,193 --> 00:25:22,062
+going to drop little squares, okay, right along the top.
+我会向下掉落小方块
+
+652
+00:25:22,064 --> 00:25:23,896
+So first let's just get them dropped along the top.
+所以首先，先让它从顶部掉落砖块
+
+653
+00:25:23,898 --> 00:25:26,365
+And then I'm going to add some gravity, and
+为它们添加重力效果
+
+654
+00:25:26,367 --> 00:25:28,267
+they're going to drop and fall.
+让它们掉落下来
+
+655
+00:25:28,269 --> 00:25:29,034
+Okay? That's why
+
+656
+00:25:29,036 --> 00:25:29,768
+they're called drops.
+这就是起名为 drops 的原因
+
+657
+00:25:29,770 --> 00:25:31,236
+They're going to fall down.
+它们将会掉落
+
+658
+00:25:31,237 --> 00:25:32,703
+So I'm gonna put these drops along the top, and
+先让它们在顶部显示
+
+659
+00:25:32,706 --> 00:25:34,672
+then later we'll add some gravity.
+随后添加重力效果
+
+660
+00:25:34,674 --> 00:25:38,842
+So let's go ahead and do the, putting them along the top
+现在开始做这些
+
+661
+00:25:38,844 --> 00:25:42,545
+first, pretty straightforward to do.
+把它们放到上边
+
+662
+00:25:42,547 --> 00:25:47,149
+So, I'm going to have the drops be evenly spaced along
+现在开始设置方块的尺寸之类的
+
+663
+00:25:47,151 --> 00:25:50,019
+the top, and I'm going to have a public variable, or
+我设置一个公有变量
+
+664
+00:25:50,021 --> 00:25:53,255
+whatever you want to call it, called dropsPerRow.
+起名为 dropsPerRow
+
+665
+00:25:54,257 --> 00:25:56,557
+It's just gonna be an integer that says how many of these
+是一个整型的
+
+666
+00:25:56,559 --> 00:25:58,059
+little squares go across the top.
+表示在顶部有多少方块
+
+667
+00:25:58,061 --> 00:26:00,227
+And so I'll do ten but I can set it to whatever I want.
+先设置为10，也可以设置为任何数值
+
+668
+00:26:00,229 --> 00:26:01,762
+I like my UI to be configurable.
+我希望我的 UI 是可以调整的
+
+669
+00:26:01,764 --> 00:26:04,497
+Of course in your homework you're gonna want that because
+在你们的作业里，你们也得这么做
+
+670
+00:26:04,499 --> 00:26:06,966
+part of your homework is to add a settings panel, but
+因为因为需要一个设置界面
+
+671
+00:26:06,968 --> 00:26:08,768
+you set a lot of configurable things.
+设置一些可以调整的东西
+
+672
+00:26:08,770 --> 00:26:11,437
+So you want to design your code to not be hard-coded all
+你不能一直把代码写得这么死
+
+673
+00:26:11,439 --> 00:26:13,122
+the time.
+
+674
+00:26:13,123 --> 00:26:14,806
+So here I'm going to make this to be number I can set.
+所以在这里我把它调整一个可以设置的数
+
+675
+00:26:14,808 --> 00:26:18,276
+And that lets me have a drop size, okay,
+再来一个变量，dropSize
+
+676
+00:26:18,278 --> 00:26:21,045
+which is going to be the size of each drop.
+是每一个方块的尺寸
+
+677
+00:26:21,047 --> 00:26:22,446
+And I'm gonna calculate that as well.
+这是通过计算得到的
+
+678
+00:26:22,448 --> 00:26:23,947
+I'm gonna have it be a calculator property,
+它是一个计算属性
+
+679
+00:26:23,949 --> 00:26:26,283
+based on this dropsPerRow.
+基于 dropsPerRow 的
+
+680
+00:26:26,285 --> 00:26:28,184
+I'm gonna have it be square.
+它们都是方块
+
+681
+00:26:28,186 --> 00:26:30,687
+So we'll have the width and height be the same.
+所以长和宽都是相同的
+
+682
+00:26:30,689 --> 00:26:34,657
+And I'm gonna make it equal to the gameView's bounds
+让它等于
+
+683
+00:26:34,659 --> 00:26:38,260
+dot size dot width, divided by the dropsPerRow.
+gameView.bounds.size.width 除以 dropsPerRow
+
+684
+00:26:38,262 --> 00:26:43,798
+So I'm just gonna take my width,
+取出游戏视图的宽
+
+685
+00:26:43,800 --> 00:26:46,467
+available width of my view, and just divide it up evenly,
+除以一共有的方块的数量
+
+686
+00:26:46,469 --> 00:26:50,071
+so that the drops exactly fill the space.
+方块就能完整地填满
+
+687
+00:26:50,073 --> 00:26:55,442
+And so now I can return a CGSize that
+现在我就可以返回一个 CGSize
+
+688
+00:26:55,444 --> 00:26:58,878
+is both this width and this height.
+包含相同的长和宽
+
+689
+00:26:58,880 --> 00:27:00,913
+Okay, so now I know my drop size.
+现在我知道了 dropSize
+
+690
+00:27:00,915 --> 00:27:05,651
+I'm going to add a gesture, which is the tap gesture.
+现在添加一个单击手势
+
+691
+00:27:05,653 --> 00:27:07,603
+When I put a tap gesture,
+当我单击的时候
+
+692
+00:27:07,604 --> 00:27:09,554
+I'm gonna put one of these drops into my view.
+我就在视图中放入个方块
+
+693
+00:27:09,556 --> 00:27:10,989
+So let's do that.
+开始实现
+
+694
+00:27:10,991 --> 00:27:12,790
+Let's go here to drag and
+向视图中
+
+695
+00:27:12,792 --> 00:27:17,761
+drop gesture out here, tap gesture right here.
+拖入一个单击手势
+
+696
+00:27:17,763 --> 00:27:20,397
+So I'm gonna drag this on here, and
+放到这里
+
+697
+00:27:20,399 --> 00:27:22,599
+bring up my document outline.
+打开 document outline
+
+698
+00:27:22,601 --> 00:27:24,200
+Here's my tap gesture right here.
+这里是单击手势
+
+699
+00:27:24,202 --> 00:27:25,568
+So I'm gonna control drag.
+CTRL-拖动
+
+700
+00:27:25,570 --> 00:27:29,438
+I'm gonna call this gesture drop.
+把它起名为 drop
+
+701
+00:27:29,440 --> 00:27:31,540
+It's a good name cuz that's what it does.
+这是一个好名字，因为这表明它完成的动作
+
+702
+00:27:31,542 --> 00:27:34,175
+It drops one of these things.
+它会向下掉落一个方块
+
+703
+00:27:34,177 --> 00:27:35,743
+Connect it. So here it is.
+连接，好了
+
+704
+00:27:35,745 --> 00:27:38,245
+I could put the code to do all the dropping here, but
+我可以把所有的掉落代码写在这里
+
+705
+00:27:38,247 --> 00:27:40,847
+I'm actually going to put it in another method.
+但实际上我会在另一个方法中实现
+
+706
+00:27:41,983 --> 00:27:43,316
+Call drop.
+叫做 drop
+
+707
+00:27:43,318 --> 00:27:44,917
+Just because it's not necessarily something
+因为不止单击手势可以
+
+708
+00:27:44,919 --> 00:27:46,185
+that could only be done by gesture.
+激活向下掉落
+
+709
+00:27:46,187 --> 00:27:49,454
+Maybe programmatically one could drop things as well.
+也许你还会通过代码来向下掉落
+
+710
+00:27:49,456 --> 00:27:53,058
+So I don't really want to put inside that gesture.
+所以我不想把它放到手势操作里
+
+711
+00:27:53,060 --> 00:27:55,326
+So all the gesture you're gonna do is do this drop.
+手势需要做的就是这个 drop 方法
+
+712
+00:27:55,328 --> 00:27:57,461
+The drop just needs to figure out where the drop is,
+drop 方法需要做的时，计算 drop 的位置
+
+713
+00:27:57,463 --> 00:28:01,064
+so let's get, actually let's make more space here first.
+先弄出一些空间
+
+714
+00:28:03,635 --> 00:28:06,703
+This, I need a lot more space than that.
+需要大一点地方
+
+715
+00:28:06,705 --> 00:28:08,270
+Okay, so we need to figure out where the drop is.
+需要弄清楚方块的位置
+
+716
+00:28:08,272 --> 00:28:10,506
+So I'm going to make it's frame, which is really easy.
+创建它的 frame，很简单
+
+717
+00:28:10,508 --> 00:28:13,208
+I'm just gonna first of all,
+首先
+
+718
+00:28:13,210 --> 00:28:16,311
+create one that is at zero, zero.
+我现在0，0点创建一个
+
+719
+00:28:16,313 --> 00:28:20,981
+Use this nice CGPointZero by the way, which is zero, zero.
+使用 CGPointZero 参数为0，0
+
+720
+00:28:20,983 --> 00:28:22,783
+And the size is, of course, our dropSize.
+size 当然是 dropSize
+
+721
+00:28:25,120 --> 00:28:27,053
+So now I've got drop at zero, zero.
+现在在0，0点有了一个方块
+
+722
+00:28:27,055 --> 00:28:30,923
+And now, I move it along somewhere along there.
+现在把它移动到别处
+
+723
+00:28:30,925 --> 00:28:35,594
+So, I'm gonna move it to frame dot origin dot x equals
+令它的 frame.origin.x
+
+724
+00:28:35,596 --> 00:28:38,830
+CGFloat dot random, dropsPerRow.
+等于 CGFloat.random(dropsPerRow)
+
+725
+00:28:38,832 --> 00:28:41,299
+And you're probably like whoa, CGFloat dot random,
+你可能会说，哇，CGFloat.random
+
+726
+00:28:41,301 --> 00:28:43,367
+you didn't tell me about that cool function.
+你没有跟我讲过这个很酷的方法
+
+727
+00:28:43,369 --> 00:28:45,936
+Well, that's because there's no such function, but
+这是因为没有这个函数
+
+728
+00:28:45,938 --> 00:28:49,739
+I'm gonna write that function right now, really quick.
+我现在来快速实现这个函数
+
+729
+00:28:49,741 --> 00:28:50,873
+There it is.
+好了
+
+730
+00:28:50,875 --> 00:28:51,707
+Okay?
+
+731
+00:28:51,709 --> 00:28:52,941
+So all it does is,
+这就是它做的事情
+
+732
+00:28:52,943 --> 00:28:56,878
+it just uses arc4random to create a random float
+使用 arc4random 创建一个随机的 float
+
+733
+00:28:56,880 --> 00:28:59,647
+between zero and one less than this maximum.
+在0和最大值之间
+
+734
+00:28:59,649 --> 00:29:02,417
+So here I'm gonna get a random float between zero and
+在这我得到了一个在0和dropsPerRow-1之间
+
+735
+00:29:02,419 --> 00:29:04,485
+dropsPerRow minus one.
+的一个随机的 float
+
+736
+00:29:04,487 --> 00:29:06,120
+Okay, that's cool.
+很酷吧
+
+737
+00:29:06,122 --> 00:29:08,989
+And then I'm gonna multiply that by times dropSize dot
+现在将它与 dropSize.width 相乘
+
+738
+00:29:08,991 --> 00:29:10,457
+width cuz I'm gonna move it off.
+把它移动到这里
+
+739
+00:29:10,459 --> 00:29:12,658
+So I just took my drop, and I made it over.
+我把它创建，将它移动
+
+740
+00:29:12,660 --> 00:29:14,527
+And it would be in a certain spot, so
+它将在某个位置上
+
+741
+00:29:14,529 --> 00:29:16,128
+I'm gonna create my dropView.
+所以我现在创建 dropView
+
+742
+00:29:16,130 --> 00:29:17,696
+It's just gonna be UIView.
+类型是 UIView
+
+743
+00:29:17,698 --> 00:29:20,031
+I'm gonna use the frame initializer here,
+使用 frame 的构造器
+
+744
+00:29:20,033 --> 00:29:22,533
+use that frame I just created above.
+上面创建的那个
+
+745
+00:29:22,535 --> 00:29:27,404
+I'm gonna set the dropView's background color to be UIColor
+把背景颜色设置为随机的
+
+746
+00:29:27,406 --> 00:29:31,875
+random, another thing I added down here below.
+我在下面已经添加这个方法了
+
+747
+00:29:31,877 --> 00:29:36,112
+Just picked one of five random colors there in my rote.
+在五个里面选择一个
+
+748
+00:29:36,114 --> 00:29:37,563
+Notice, by the way,
+主意
+
+749
+00:29:37,564 --> 00:29:39,013
+that when I added these extensions to UIFloat and
+当我给 CGFloat 和 UIColor 添加 extension 的时候
+
+750
+00:29:39,016 --> 00:29:40,849
+UIColor, I made them private.
+是私有的
+
+751
+00:29:40,851 --> 00:29:42,851
+That means only I can use them.
+这表明只有我能使用它们
+
+752
+00:29:42,853 --> 00:29:45,887
+But it also means the name won't conflict with someone
+也意味着命名不会冲突
+
+753
+00:29:45,889 --> 00:29:48,756
+else if someone else writes their own CGFloat dot random
+如果其他人也写了一个 参数为 Int 的 CGFloat.random
+
+754
+00:29:48,758 --> 00:29:50,024
+that takes an int.
+
+755
+00:29:50,026 --> 00:29:51,758
+Theirs will work in their file, and
+它们的会在它们的文件里有效
+
+756
+00:29:51,760 --> 00:29:52,759
+mine will work in my file.
+我的会在我这里有效
+
+757
+00:29:52,761 --> 00:29:55,028
+Okay, so it's private to this file.
+对这个文件来说它是私有的
+
+758
+00:29:55,030 --> 00:29:56,729
+So that's one nice thing about extensions,
+这是 extension 的一个比较好的特性
+
+759
+00:29:56,731 --> 00:29:59,831
+you can kind of control the privacy of extensions.
+你可以控制 extension 的公私有性
+
+760
+00:30:00,801 --> 00:30:02,834
+So there I have my dropView.
+现在我有了 dropView 
+
+761
+00:30:02,835 --> 00:30:04,868
+Now I'm just gonna add it to my gameView, addSubview.
+我把它添加到 gameView 上，通过 addSubview
+
+762
+00:30:04,871 --> 00:30:07,471
+We really haven't had you doing addSubview.
+我们之前还没用过 addSubView
+
+763
+00:30:07,473 --> 00:30:10,607
+But cuz you've been doing all the views in your storyboard.
+因为之前都是在 stroyboard 中添加视图
+
+764
+00:30:10,609 --> 00:30:12,609
+But in your homework you're going to be adding your
+但在作业中，你将使用 addSubView 
+
+765
+00:30:12,611 --> 00:30:16,246
+bricks, views, and all that stuff, using addSubview.
+来添加砖块，视图之类的视图
+
+766
+00:30:16,248 --> 00:30:17,680
+Probably your storyboard's just going to be
+也许你的 storyboard 
+
+767
+00:30:17,682 --> 00:30:18,731
+completely blank.
+会是完全空白的
+
+768
+00:30:18,732 --> 00:30:19,781
+Or maybe you might have the score and
+也许你还有显示分数
+
+769
+00:30:19,784 --> 00:30:21,751
+some other things in there.
+和其他东西
+
+770
+00:30:21,752 --> 00:30:23,719
+But the bricks and the paddle, and ball,
+但是砖块和球之类的东西
+
+771
+00:30:23,721 --> 00:30:24,986
+that's all going to be added.
+都需要通过这种方式添加
+
+772
+00:30:24,988 --> 00:30:26,288
+You're gonna add with addSubview.
+使用 addSubView
+
+773
+00:30:26,289 --> 00:30:27,589
+That's part of what this assignment is about.
+这是这次作业的部分内容
+
+774
+00:30:27,591 --> 00:30:30,324
+So you get some experience creating and
+所以你们会获得一些
+
+775
+00:30:30,326 --> 00:30:31,926
+adding views in code.
+通过代码添加视图的经验
+
+776
+00:30:31,928 --> 00:30:32,993
+Okay? So that's what we're doing.
+这就是我们在做的事情
+
+777
+00:30:32,995 --> 00:30:35,128
+So let's go see what this looks like.
+让我们看看效果
+
+778
+00:30:35,130 --> 00:30:38,198
+Hopefully when we tap we'll get a random square along
+希望在点击过后
+
+779
+00:30:38,200 --> 00:30:41,167
+the top of our view here.
+一个方块会出现在顶部
+
+780
+00:30:41,169 --> 00:30:42,201
+So tap, we got one.
+所以点击，有了一个
+
+781
+00:30:42,203 --> 00:30:43,602
+Good, we're getting them.
+好的，我们已经做到了
+
+782
+00:30:43,604 --> 00:30:45,937
+So here I'm tapping them, this is great.
+我一直点击，很棒
+
+783
+00:30:45,939 --> 00:30:48,106
+Okay, so we're adding these things along the top,
+我们已经在顶部添加了这些
+
+784
+00:30:48,108 --> 00:30:50,041
+now I'm gonna add gravity.
+现在我来添加重力效果
+
+785
+00:30:50,043 --> 00:30:51,776
+Okay, I'm going to add a gravitational field, and
+添加一个重力场
+
+786
+00:30:51,778 --> 00:30:53,177
+it's going to apply to all these things.
+它会适应所有的物体
+
+787
+00:30:53,179 --> 00:30:55,412
+It's going to pull them all down to the bottom of
+会将它们拉到屏幕的底部
+
+788
+00:30:55,414 --> 00:30:56,046
+the screen.
+
+789
+00:30:56,048 --> 00:30:57,080
+Okay?
+
+790
+00:30:57,082 --> 00:30:59,682
+So these all will just fall down.
+它们都会掉落下来
+
+791
+00:30:59,684 --> 00:31:03,385
+Turns out this very, very easy to do, okay?
+然而实现起来很简单
+
+792
+00:31:03,387 --> 00:31:06,822
+All I need to do is create a gravitational field so
+创建一个重力场
+
+793
+00:31:06,824 --> 00:31:12,360
+I'm going to say, let gravity equal a UIGravityBehaviour.
+let gravity = UIGravityBehaviour
+
+794
+00:31:12,362 --> 00:31:14,628
+Okay, so boom, I have a UIGravityBehavior.
+boom，我有了一个 UIGravityBehavior
+
+795
+00:31:14,630 --> 00:31:18,332
+I'm gonna take the default magnitude and direction which
+默认的方向是向下
+
+796
+00:31:18,334 --> 00:31:21,735
+is down, at a thousand points per second per second.
+速度是1000点/秒/秒
+
+797
+00:31:21,737 --> 00:31:23,603
+So that's perfectly fine to me.
+对于我来说不错
+
+798
+00:31:23,605 --> 00:31:26,806
+Of course I also need a dynamic animator.
+当然我还需要一个 dynamic animator
+
+799
+00:31:26,808 --> 00:31:28,207
+Okay?
+
+800
+00:31:28,208 --> 00:31:29,607
+So I'm going to create a dynamic animator here.
+在这里创建一个
+
+801
+00:31:31,245 --> 00:31:38,616
+Now, I wanna say this, referenceView is gameView.
+设置它的 referenceView 为 gameView
+
+802
+00:31:38,618 --> 00:31:39,283
+Okay? But I'm not gonna
+但是现在这种
+
+803
+00:31:39,285 --> 00:31:41,802
+be able to do this.
+方式不行
+
+804
+00:31:41,803 --> 00:31:44,320
+Now, a lot of you tripped into this, on your, assignments.
+好多人都在作业里被这一点困住了
+
+805
+00:31:44,323 --> 00:31:45,989
+I saw on Piazza, a lot of questions about this.
+我看到 Piazza 上有好多关于这个的问题
+
+806
+00:31:45,991 --> 00:31:47,591
+You're, like, oh, what, what's going on here?
+到底发生了什么？
+
+807
+00:31:47,593 --> 00:31:49,659
+And you click this warning, and it says,
+点击一下错误
+
+808
+00:31:49,661 --> 00:31:50,960
+gameView is not a part of.
+它说
+
+809
+00:31:50,962 --> 00:31:54,030
+DropitViewController, of course it is, it's right here.
+gameView 不是 DropitViewController 的一部分，当然是，它就在这里
+
+810
+00:31:54,032 --> 00:31:56,598
+What the heck is going on?
+到底发生了什么？
+
+811
+00:31:56,600 --> 00:31:59,134
+And hopefully all of you have figured out that
+希望你们都发现了
+
+812
+00:31:59,136 --> 00:32:00,602
+the reason that's happening is because
+发生这种错误的原因是
+
+813
+00:32:00,604 --> 00:32:03,638
+I'm in the middle of initializing here.
+我在构造
+
+814
+00:32:03,640 --> 00:32:07,208
+Okay, this is initializing this variable.
+这里在构造这个变量
+
+815
+00:32:07,210 --> 00:32:09,877
+And you cannot access your own properties and
+但你不能在这里引用属性和方法
+
+816
+00:32:09,879 --> 00:32:12,746
+methods until you're fully initialized.
+直到你被完整构造出来
+
+817
+00:32:12,748 --> 00:32:14,614
+So obviously, you can't access them while you're
+所以显然
+
+818
+00:32:14,616 --> 00:32:16,916
+initializing, by definition, so that's the problem.
+在这里你不能引用 gameView，这是个问题
+
+819
+00:32:16,918 --> 00:32:18,751
+So, how do I get out of this conundrum?
+怎样能去掉这个错误
+
+820
+00:32:18,753 --> 00:32:22,154
+Because UIDyanmicAnimator needs this game view
+因为 UIDyanmicAnimator 需要这个 gameView 
+
+821
+00:32:22,156 --> 00:32:23,956
+as its reference.
+作为引用
+
+822
+00:32:23,957 --> 00:32:25,757
+Well, one thing is, I could make this an optional and
+我可以把它设置为 optional
+
+823
+00:32:25,759 --> 00:32:28,927
+set to nil, and then the view did load, when I know that's
+在 viewDidLoad 方法中
+
+824
+00:32:28,929 --> 00:32:32,030
+set I could set the, I could create the animator there.
+创建 animator
+
+825
+00:32:32,032 --> 00:32:33,297
+Yeah, you could do that.
+你可以这样做
+
+826
+00:32:33,299 --> 00:32:35,599
+Another way to do it is using a lazy.
+另一种方式是使用 lazy
+
+827
+00:32:35,601 --> 00:32:38,552
+Variable. So
+
+828
+00:32:38,553 --> 00:32:41,504
+I'm gonna make this var lazy and I'm gonna set its initial
+把这个变量变为 lazy
+
+829
+00:32:41,506 --> 00:32:46,075
+value equal to the result of executing a closure.
+把它的初始化变为一个闭包的执行结果
+
+830
+00:32:47,611 --> 00:32:49,244
+Okay.
+
+831
+00:32:49,246 --> 00:32:51,312
+So, this is not gonna happen,
+这里不会调用
+
+832
+00:32:51,314 --> 00:32:53,848
+this is not going to get initialized,
+这里不会初始化
+
+833
+00:32:53,850 --> 00:32:57,385
+until someone actually asks for this animator.
+知道某人引用这个 animator
+
+834
+00:32:57,387 --> 00:33:00,421
+And once they ask for it, I'm gonna execute this closure
+一旦别处引用，这个闭包将被执行
+
+835
+00:33:00,423 --> 00:33:02,456
+by just having the closure with parentheses.
+这个带括号的闭包
+
+836
+00:33:02,458 --> 00:33:05,125
+It takes no arguments, so I just call it with parentheses.
+没有参数，所以只要有括号就可以
+
+837
+00:33:05,127 --> 00:33:06,859
+And it's going to execute this closure.
+它将会执行这个闭包
+
+838
+00:33:06,861 --> 00:33:10,429
+Now, this closure better return a UIDynamicAnimator.
+这个闭包最好返回一个 UIDyanmicAnimator
+
+839
+00:33:10,431 --> 00:33:12,598
+Okay, because I'm setting it equal to the result.
+因为我把它设置为闭包的返回结果
+
+840
+00:33:12,600 --> 00:33:18,136
+And in fact, it's going to, because I'm gonna say, let
+实际上
+
+841
+00:33:18,138 --> 00:33:23,240
+lazilyCreatedDynamicAnimator equal that, okay?
+let UIDyanmicAnimator = 
+
+842
+00:33:23,242 --> 00:33:24,441
+Now, this is inside a closure.
+现在是在闭包内部
+
+843
+00:33:24,443 --> 00:33:28,078
+So I'm gonna want to say self.gameView, right?
+所以需要添加 self
+
+844
+00:33:28,080 --> 00:33:31,014
+And then I'm just going to return
+接着
+
+845
+00:33:31,016 --> 00:33:34,117
+lazilyCreatedDynamicAnimator.
+返回 lazilyCreatedDynamicAnimator
+
+846
+00:33:34,119 --> 00:33:34,917
+Okay?
+
+847
+00:33:34,919 --> 00:33:38,320
+This kind of solves the problem.
+解决了问题
+
+848
+00:33:38,322 --> 00:33:39,654
+Okay? I don't have any warnings,
+没有警告
+
+849
+00:33:39,656 --> 00:33:42,891
+but you gotta be careful you better not call this
+但是你得注意
+
+850
+00:33:42,893 --> 00:33:44,192
+before this gets set.
+最好别在它被设置好之前调用它
+
+851
+00:33:45,261 --> 00:33:46,994
+Because this is going to be nill, you're
+因为它会是 nil
+
+852
+00:33:46,996 --> 00:33:49,062
+going to have a reference view nill, your animator is
+它的引用视图为 nil
+
+853
+00:33:49,064 --> 00:33:50,964
+going to get created with no reference view.
+你的 animator 将不会有引用视图
+
+854
+00:33:50,966 --> 00:33:52,899
+It ain't going to work.
+它不会工作的
+
+855
+00:33:52,901 --> 00:33:54,317
+Okay?
+
+856
+00:33:54,318 --> 00:33:55,734
+So you gotta be careful about when you call this.
+所以在调用的时候得注意一下
+
+857
+00:33:55,737 --> 00:33:57,436
+Okay? When you access this property.
+当你引用这个属性的时候
+
+858
+00:33:57,438 --> 00:33:58,970
+So I'm not gonna act as this property until I
+所以在 viewDidLoad 之前，我不会引用这个变量
+
+859
+00:33:58,972 --> 00:34:01,206
+get to viewDidLoad, cuz then I'll know
+因为我知道
+
+860
+00:34:01,208 --> 00:34:04,208
+that this outlet right here has been set.
+这个 outlet 已经被设置好了
+
+861
+00:34:04,210 --> 00:34:05,927
+Okay?
+
+862
+00:34:05,928 --> 00:34:07,645
+So let's go ahead and do viewDidLoad, in fact.
+现在来实现 viewDidLoad
+
+863
+00:34:07,647 --> 00:34:11,048
+So in viewDidLoad, all I'm gonna do is.
+在这里需要做的是
+
+864
+00:34:12,551 --> 00:34:15,651
+Say animator, add behavior gravity.
+animator.addBehavior(gravity)
+
+865
+00:34:16,620 --> 00:34:19,521
+So now, I have a gravitational field,
+所以现在，我有了重力场
+
+866
+00:34:19,523 --> 00:34:22,157
+I've added it to an animator, so an animator is now going to
+把它添加到了 animator 里，所以 animator 现在会
+
+867
+00:34:22,159 --> 00:34:24,792
+be animating the behavior of items in there.
+发动里面所有的特性
+
+868
+00:34:24,794 --> 00:34:27,395
+The only thing I need to do is say
+我在这里只要指明
+
+869
+00:34:27,397 --> 00:34:30,297
+which items are affected by gravity.
+哪个物体被重力影响
+
+870
+00:34:30,299 --> 00:34:31,431
+So I'm gonna go right down and
+所以到这里
+
+871
+00:34:31,433 --> 00:34:36,402
+say, gravity add item, my drop view.
+gravity.addItem(dropView)
+
+872
+00:34:36,404 --> 00:34:39,839
+Now the instance I say this, the instancy animator,
+这个 animator 的实例
+
+873
+00:34:39,841 --> 00:34:43,375
+the instance the behavior gets added to the animator, all
+behavior 被添加到了 animator 中
+
+874
+00:34:43,377 --> 00:34:46,978
+items in that gravity field are going to start animating.
+所有 gravity 中的物体都会开始动画
+
+875
+00:34:46,980 --> 00:34:49,514
+Now I can add those items later and then they'll start
+添加了之后，它们就会动画
+
+876
+00:34:49,516 --> 00:34:52,383
+animating, I can take them out and it'll stop animating.
+移除了之后，它们就会停止
+
+877
+00:34:52,385 --> 00:34:54,585
+It's all instantaneous, okay.
+这些都是瞬间发生的
+
+878
+00:34:54,587 --> 00:34:57,354
+So if I run now, since I have an animator and
+如果现在运行，我有了 animator 和 
+
+879
+00:34:57,356 --> 00:34:58,889
+a gravitational field and
+重力场
+
+880
+00:34:58,891 --> 00:35:02,492
+I put the items in there, they fall, okay.
+我把方块放进去，它们就会掉落
+
+881
+00:35:02,494 --> 00:35:03,944
+Now they're accelerating.
+它们在加速
+
+882
+00:35:03,945 --> 00:35:05,395
+See how they're getting faster and faster at the bottom?
+它们会在底部变得越来越快
+
+883
+00:35:05,397 --> 00:35:06,495
+They're accelerating due to gravity and
+这是因为重力
+
+884
+00:35:06,497 --> 00:35:08,997
+I can have as many of them as I want.
+我可以添加任意多个
+
+885
+00:35:08,999 --> 00:35:12,768
+Okay and they will accelerate.
+它们都会加速
+
+886
+00:35:12,770 --> 00:35:15,236
+They'll all be accelerating their own
+它们都会以自己的
+
+887
+00:35:15,238 --> 00:35:17,005
+gravitational acceleration.
+重力加速度加速
+
+888
+00:35:17,007 --> 00:35:18,773
+Okay now this is great except for
+都不错，只是
+
+889
+00:35:18,775 --> 00:35:21,075
+they're just falling off the end and they're gone.
+它们掉出了屏幕
+
+890
+00:35:21,077 --> 00:35:23,343
+And really what I want is for them to stay on screen.
+我想要它们呆在屏幕上
+
+891
+00:35:23,345 --> 00:35:26,079
+So I'm gonna create a collision behavior where
+所以我添加碰撞属性
+
+892
+00:35:26,081 --> 00:35:30,282
+the edges of my reference view here are going to.
+在屏幕的底部
+
+893
+00:35:30,284 --> 00:35:33,419
+Stop these things and they are gonna bounce off okay?
+这会使得它们停在那里，并弹起
+
+894
+00:35:33,421 --> 00:35:36,521
+So they are going to collide, again really easy to do,
+它们将会碰撞，很容易实现
+
+895
+00:35:36,523 --> 00:35:39,524
+I'm just gonna go up here and create a collision behavior.
+在上面，创建一个碰撞特性
+
+896
+00:35:39,526 --> 00:35:40,725
+I'm gonna do these same thing here and
+和这里完成的工作一样
+
+897
+00:35:40,727 --> 00:35:42,093
+do a lazy version of this and
+一个 lazy 版本的
+
+898
+00:35:42,095 --> 00:35:43,527
+I'll show you why I'm doing that.
+你们也知道为什么要这样做
+
+899
+00:35:43,529 --> 00:35:45,195
+I'm gonna call it my collider.
+起名为 collider
+
+900
+00:35:45,197 --> 00:35:48,264
+It's a UI collision behavior.
+类型为 UICollisionBehavior
+
+901
+00:35:49,267 --> 00:35:55,137
+I'm gonna set it equal to executing a closure.
+把它设置为闭包执行的结果
+
+902
+00:35:55,139 --> 00:36:01,376
+I'll say let my lazilyCreatedCollider
+let lazilyCreatedCollider
+
+903
+00:36:01,378 --> 00:36:06,146
+equal UICollisionBehavior.
+= UICollisionBehavior
+
+904
+00:36:06,148 --> 00:36:07,080
+Okay?
+
+905
+00:36:07,082 --> 00:36:07,814
+And.
+
+906
+00:36:09,517 --> 00:36:12,051
+Then, oops.
+哦
+
+907
+00:36:12,053 --> 00:36:14,687
+Don't want that there cuz I'm not creating it there.
+不在这里加括号，因为不在这里创建
+
+908
+00:36:14,689 --> 00:36:16,555
+There we go.
+好了
+
+909
+00:36:16,557 --> 00:36:19,424
+So, now, the reason I did this is not because I have this
+我没有调用那个构造器
+
+910
+00:36:19,426 --> 00:36:21,859
+reference view problem or anything like that.
+是因为
+
+911
+00:36:21,861 --> 00:36:24,495
+It's just that I wanna configure this thing.
+我想设置一下它的某些属性
+
+912
+00:36:24,497 --> 00:36:25,680
+Okay?
+
+913
+00:36:25,681 --> 00:36:26,864
+And one thing I wanna configure here is
+其中一个是
+
+914
+00:36:26,866 --> 00:36:30,400
+that I want it to translate the reference bounds.
+把屏幕的边界变为边界
+
+915
+00:36:30,402 --> 00:36:31,901
+Into a boundary.
+
+916
+00:36:31,903 --> 00:36:34,670
+That means the edges of my reference view are going to
+这意味着 referenceView 
+
+917
+00:36:34,672 --> 00:36:36,789
+be a boundary.
+将会变为边界
+
+918
+00:36:36,790 --> 00:36:38,907
+So, anything, any items that are in this collider will
+在这个 collider 中的任何物体
+
+919
+00:36:38,909 --> 00:36:41,143
+bounce off of that, those bounds.
+都会在边界弹起来
+
+920
+00:36:41,145 --> 00:36:41,743
+Okay?
+
+921
+00:36:41,745 --> 00:36:42,877
+And now I'll return.
+然后，返回它
+
+922
+00:36:42,879 --> 00:36:45,479
+So here you can see two different reasons.
+所以你可以看到利用闭包使用 lazy
+
+923
+00:36:45,481 --> 00:36:49,249
+That I've used for using this lazy with the closure.
+有两种不同的原因
+
+924
+00:36:49,251 --> 00:36:51,501
+One is,
+一个是
+
+925
+00:36:51,502 --> 00:36:53,752
+there was something I couldn't access during initialization,
+在构造期间有一些东西不能饮用
+
+926
+00:36:53,755 --> 00:36:57,623
+another one is I wanted to initialize some state, okay?
+另一个是构造完毕后设置它的一些属性
+
+927
+00:36:57,625 --> 00:37:01,593
+Those are both valid reasons to do this lazy business.
+这些都是使用 lazy 的正当理由
+
+928
+00:37:01,595 --> 00:37:02,995
+Okay?
+
+929
+00:37:02,996 --> 00:37:04,396
+So, I need to add that to the animator.
+我需要把它添加到 animator 中
+
+930
+00:37:06,433 --> 00:37:10,535
+Collider and of course I need, if I want these drops
+如果我想让这些方块碰撞
+
+931
+00:37:10,537 --> 00:37:13,471
+to collide, they need to be added to the collider as well.
+需要将他们放入 collider 中
+
+932
+00:37:13,473 --> 00:37:16,740
+Okay?
+
+933
+00:37:16,742 --> 00:37:17,874
+And that's it.
+好了
+
+934
+00:37:17,876 --> 00:37:21,077
+That's all, again, this stuff is amazingly simple,
+这些东西非常精简
+
+935
+00:37:21,079 --> 00:37:24,980
+you just add the behaviors and things will start behaving.
+你只需要添加 behavior 就会起作用
+
+936
+00:37:24,982 --> 00:37:26,382
+Okay? So let's watch.
+看看效果
+
+937
+00:37:26,384 --> 00:37:27,582
+What happens here.
+发生了什么
+
+938
+00:37:27,584 --> 00:37:28,216
+So we drop one in.
+掉落一个
+
+939
+00:37:28,218 --> 00:37:29,050
+Oh see?
+看到了吗
+
+940
+00:37:29,052 --> 00:37:30,317
+Bounce at the bottom.
+在底部弹起
+
+941
+00:37:30,319 --> 00:37:33,354
+Didn't bounce very much, it's not a very big bounce, but
+没弹起很高，但是它
+
+942
+00:37:33,356 --> 00:37:34,855
+it did bounce.
+的确弹起来了
+
+943
+00:37:34,856 --> 00:37:36,355
+We're gonna make it bounce some more in a minute here.
+一会我们会让它弹地高一点
+
+944
+00:37:36,358 --> 00:37:38,024
+But again, if I send a whole bunch of them down,
+如果多掉落一些
+
+945
+00:37:38,026 --> 00:37:40,059
+not only do they bounce off the bottom,
+它们不止会在底部弹起
+
+946
+00:37:40,061 --> 00:37:42,361
+they'll bounce off of each other a little bit, too.
+它们之间也会这样
+
+947
+00:37:42,363 --> 00:37:44,430
+And they also can rotate.
+它们也可以旋转
+
+948
+00:37:44,432 --> 00:37:46,365
+So if I send too many of them down here, and
+如果我掉落太多
+
+949
+00:37:46,367 --> 00:37:49,067
+if they're getting a little, oh, look.
+它们就会
+
+950
+00:37:49,069 --> 00:37:50,468
+Oh no!
+哦
+
+951
+00:37:50,470 --> 00:37:52,970
+Okay, oh no, it's collapsed.
+发生跌落了
+
+952
+00:37:52,972 --> 00:37:55,906
+Okay, so these things are allowed to tilt and rotate and
+这些东西都会倾斜，旋转
+
+953
+00:37:55,908 --> 00:37:57,407
+they can all just collapse and fall down.
+跌落
+
+954
+00:37:58,510 --> 00:37:59,509
+Okay?
+
+955
+00:37:59,511 --> 00:38:00,676
+Cuz that's the physics of them.
+这是它们的物理属性
+
+956
+00:38:00,678 --> 00:38:02,878
+When they bounce, they might hit a little ledge and
+当弹起的时候，可能会碰到边角
+
+957
+00:38:02,880 --> 00:38:07,115
+boom, since they can rotate, they'll tilt and tip over.
+旋转，倾斜
+
+958
+00:38:07,117 --> 00:38:07,682
+Okay?
+
+959
+00:38:09,585 --> 00:38:11,051
+All right, so that's that.
+就是这样
+
+960
+00:38:11,053 --> 00:38:16,489
+Now what if I had my game here, and I wanted to not
+如果我的游戏是这样
+
+961
+00:38:16,491 --> 00:38:19,192
+have them tilt like that, I wanted them to stay in their
+我不想让它们倾斜
+
+962
+00:38:19,194 --> 00:38:21,994
+nice neat rows, and also I want them to bounce more.
+我想让它们在列中直直地排列，而且弹起更高
+
+963
+00:38:21,996 --> 00:38:23,829
+I don't want such a little tiny bounce,
+现在的弹跳太不给力了
+
+964
+00:38:23,831 --> 00:38:24,830
+that's not very exciting.
+一点也不爽
+
+965
+00:38:24,832 --> 00:38:26,531
+I want a big old bounce okay?
+我需要一个大跳！
+
+966
+00:38:26,533 --> 00:38:27,699
+Off each other and off the bottom.
+在它们之间还有屏幕底部
+
+967
+00:38:27,701 --> 00:38:28,966
+So how would I do that?
+怎样实现呢？
+
+968
+00:38:28,968 --> 00:38:32,136
+Well I would add a dynamic item behavior that we
+我可以添加一个 behavior
+
+969
+00:38:32,138 --> 00:38:34,671
+talked about in lecture, but it started to get the point
+但是现在 behavior 太多了
+
+970
+00:38:34,673 --> 00:38:37,474
+here where I have an awful lot of different behaviors acting
+这些 behavior 都在这些方块上起作用
+
+971
+00:38:37,476 --> 00:38:39,242
+on each of these drops.
+
+972
+00:38:39,244 --> 00:38:41,310
+So this is the time where I'm probably like,
+所以，我现在想
+
+973
+00:38:41,312 --> 00:38:45,113
+I wanna create my own dynamic behavior that is a composite
+创建一个自己的 dynamic behavior 
+
+974
+00:38:45,115 --> 00:38:46,314
+of all these things.
+把所有的东西添加到那里边
+
+975
+00:38:46,316 --> 00:38:47,682
+The collider, the gravity,
+碰撞，重力
+
+976
+00:38:47,684 --> 00:38:50,785
+and the bounciness and the don't rotate.
+弹跳，不旋转等等
+
+977
+00:38:50,787 --> 00:38:52,386
+All that, so I want it all kind of in one thing.
+把所有的东西放入其中
+
+978
+00:38:52,388 --> 00:38:53,553
+So, let's do that.
+动手实现吧
+
+979
+00:38:53,555 --> 00:38:55,789
+We'll just do that by creating a new file here.
+创建一个新文件
+
+980
+00:38:55,791 --> 00:38:58,558
+New > File.
+
+981
+00:38:58,560 --> 00:39:00,693
+And it's a Cocoa Touch class.
+Cocoa Touch 类
+
+982
+00:39:00,695 --> 00:39:04,229
+It's gonna be a UIDynamicBehavior subclass,
+UIDynamicBehavior 子类
+
+983
+00:39:04,231 --> 00:39:04,796
+okay?
+
+984
+00:39:04,798 --> 00:39:06,364
+I'm gonna call it.
+起名为
+
+985
+00:39:06,366 --> 00:39:08,265
+DropitBehavior, because that's what it is.
+DropitBehavior
+
+986
+00:39:08,267 --> 00:39:11,135
+It's the behavior for these Dropit things.
+它是给 Dropit 提供 behavior 
+
+987
+00:39:11,137 --> 00:39:12,235
+So I could call DropitBehavior.
+所以起名为 DropitBehavior
+
+988
+00:39:12,237 --> 00:39:13,570
+I could maybe call it DropBehavior,
+也可以起名为 DropBehavior
+
+989
+00:39:13,572 --> 00:39:14,604
+I like it DropitBehavior,
+但是我喜欢 DropitBehavior
+
+990
+00:39:14,606 --> 00:39:16,806
+cuz it's really the behavior of my whole,
+因为它是为我这个 Dropit 游戏
+
+991
+00:39:16,808 --> 00:39:19,641
+all the things participating in my Dropit game here.
+提供 behavior 的东西
+
+992
+00:39:19,643 --> 00:39:21,510
+So here's a DropitBehavior.
+这就是 DropitBehavior
+
+993
+00:39:21,512 --> 00:39:23,611
+Doesn't have anything in it to start.
+没有什么东西
+
+994
+00:39:23,613 --> 00:39:26,214
+And all I'm gonna do is basically take
+我现在将这些东西
+
+995
+00:39:26,216 --> 00:39:28,449
+these things like gravity and collider.
+gravity 和 collider 
+
+996
+00:39:28,451 --> 00:39:35,355
+Out of here, okay, and put him over in here like that.
+取出来，放到这里
+
+997
+00:39:35,357 --> 00:39:38,642
+Oops, sorry.
+抱歉
+
+998
+00:39:38,643 --> 00:39:41,928
+And then I'm going to override init from UIDynamicBehavior,
+然后，重写 UIDynamicBehavior 的 init 方法
+
+999
+00:39:41,930 --> 00:39:43,062
+right?
+
+1000
+00:39:43,063 --> 00:39:44,195
+This is a subclass of UIDynamicBehavior.
+这是 UIDynamicBehavior 子类
+
+1001
+00:39:44,198 --> 00:39:46,231
+So I'll call super init.
+所以在 init 中调用 super.init
+
+1002
+00:39:46,233 --> 00:39:50,268
+And then all I'm gonna do is add child behaviors for
+在这里调用 addChildBehavior
+
+1003
+00:39:50,270 --> 00:39:52,387
+gravity.
+参数是 graviry
+
+1004
+00:39:52,388 --> 00:39:54,505
+And add a child behavior for the collider.
+然后是 collider
+
+1005
+00:39:54,507 --> 00:39:57,475
+Okay, so now that I've added these behaviors,
+现在我添加了这些 behavior
+
+1006
+00:39:57,477 --> 00:40:01,411
+now my dropit behavior behaves like those things do combined.
+我的方块是这个 behavior 的结合
+
+1007
+00:40:02,647 --> 00:40:04,036
+Okay?
+
+1008
+00:40:04,037 --> 00:40:05,426
+Cuz they're children behavior of me.
+因为这是我的子特性
+
+1009
+00:40:05,427 --> 00:40:06,816
+So this is a awesome way to create a powerful behavior
+这是创建强大 behavior 的一种很好的方式
+
+1010
+00:40:06,818 --> 00:40:09,218
+just by taking other powerful behaviors.
+在其中添加其他强大的 behavior 就好了
+
+1011
+00:40:09,220 --> 00:40:13,422
+I'm also gonna have an addDrop function here,
+再添加一个 addDrop 方法
+
+1012
+00:40:13,424 --> 00:40:17,659
+that takes a drop, which is gonna be UIView, one of these
+参数是一个 drop 类型是 UIView
+
+1013
+00:40:17,661 --> 00:40:22,230
+things that we're creating, and I'm going to add the drop
+在这里把它添加到
+
+1014
+00:40:23,666 --> 00:40:28,568
+as items to both my gravity and my collider.
+gravity 和 colider 的 item 中
+
+1015
+00:40:30,806 --> 00:40:32,238
+And in fact, and
+实际上
+
+1016
+00:40:32,240 --> 00:40:35,174
+this is debatable whether this is kind of the architecture
+这里也是可以探讨的
+
+1017
+00:40:35,176 --> 00:40:39,044
+one would want, but I'm gonna actually manage the view
+也就是构架的问题
+
+1018
+00:40:39,046 --> 00:40:41,913
+whether it's in the view hierarchy or not, here.
+但是我想在这里把这个 view 添加到 
+
+1019
+00:40:41,915 --> 00:40:46,984
+So I'm going to add this drop to my reference view
+reference view 的子视图里
+
+1020
+00:40:46,986 --> 00:40:49,720
+whenever you call addDrop in my behavior.
+当你调用我的 behavior 的 addDrop 
+
+1021
+00:40:49,722 --> 00:40:53,390
+So I know the dynamic animator I'm in, all right,
+我知道我在哪个 dynamic animator 中
+
+1022
+00:40:53,392 --> 00:40:55,258
+because I'm a behavior.
+因为我是一个 behavior
+
+1023
+00:40:55,260 --> 00:40:58,061
+I might be nil, but might not, and
+我可能是 nil 也可能不是
+
+1024
+00:40:58,063 --> 00:41:01,731
+I know the reference view for that dynamic animator.
+我知道 dynamic animator 的引用视图
+
+1025
+00:41:01,733 --> 00:41:04,099
+That might be nil but probably not.
+可能是 nil 也可能不是
+
+1026
+00:41:04,101 --> 00:41:06,668
+And so from there, I can add SubviewThisDrop.
+所以在这里，我把 drop 添加为子视图
+
+1027
+00:41:08,738 --> 00:41:12,239
+So if you call addDrop on this drop behavior, it will add it
+所以当你调用这个 drop behavior 的 addDrop 时
+
+1028
+00:41:12,241 --> 00:41:15,909
+to the reference view and then add it to its behaviors.
+它会把 drop 添加到引用视图里，然后添加到 behaviors 里面
+
+1029
+00:41:15,911 --> 00:41:17,644
+And same thing, I could have a removeDrop.
+我也可以添加一个 removeDrop 方法
+
+1030
+00:41:17,646 --> 00:41:23,116
+All right, which takes a UI view and it does the opposite.
+参数相同，做的事情相反
+
+1031
+00:41:23,118 --> 00:41:26,552
+So, gravity.removeItem, the drop.
+gravity.removeItem 参数为 drop
+
+1032
+00:41:26,554 --> 00:41:29,221
+Collider.removeItem, the drop.
+Collider.removeItem
+
+1033
+00:41:29,223 --> 00:41:32,290
+And drop.removeFromSuperView.
+drop.removeFromSuperView
+
+1034
+00:41:32,292 --> 00:41:35,193
+Okay?
+
+1035
+00:41:35,195 --> 00:41:38,062
+So now I have this nice class right here,
+现在有了一个不错的类
+
+1036
+00:41:38,064 --> 00:41:39,296
+which is a behavior, and
+是一个 behavior
+
+1037
+00:41:39,298 --> 00:41:42,399
+it replaces all those behavioral things over here.
+它代替了这些所有
+
+1038
+00:41:42,401 --> 00:41:45,369
+So, instead of animating behavior and
+为了取代 animator 和分开的 gravity
+
+1039
+00:41:45,371 --> 00:41:49,639
+gravity separately, I can just create a dropItBehavior
+我只需创建一个 dropItBehavior
+
+1040
+00:41:49,641 --> 00:41:54,877
+equals DropItBehavior, okay, so just create one of those.
+只创建一个
+
+1041
+00:41:54,879 --> 00:41:58,146
+And it could even probably even say let here, okay?
+也可以设置为常量
+
+1042
+00:41:58,148 --> 00:41:59,681
+And then in addBehavior,
+在 addBehavior 中
+
+1043
+00:41:59,683 --> 00:42:02,950
+I can just say add the dropItBehavior.
+只需要添加 dropItBehavior
+
+1044
+00:42:02,952 --> 00:42:03,851
+Okay? So I don't need to
+我不需要再添加
+
+1045
+00:42:03,853 --> 00:42:05,152
+add the collider separately,
+collider 了
+
+1046
+00:42:05,154 --> 00:42:07,554
+just do the drop behavior and same thing down here.
+这里也是
+
+1047
+00:42:07,556 --> 00:42:11,725
+All three of these things, adding the subview,
+这里的操作
+
+1048
+00:42:11,727 --> 00:42:17,396
+those all are just replaced by saying dropitBehavior.addDrop,
+可以改成 dropitBehavior.addDrop
+
+1049
+00:42:17,398 --> 00:42:19,031
+and the drop view.
+参数为 dropView
+
+1050
+00:42:19,033 --> 00:42:20,499
+'Kay? So you can see my
+你可以看到
+
+1051
+00:42:20,501 --> 00:42:23,768
+code here has gotten much more focused on kind of,
+这里的代码变得更清晰了
+
+1052
+00:42:23,770 --> 00:42:25,169
+what we're doing and
+专注于我们的业务
+
+1053
+00:42:25,171 --> 00:42:27,838
+the behaviors have been moved off into the behavior code.
+behavior 的代码被移到了别处
+
+1054
+00:42:27,840 --> 00:42:30,374
+Now let's run this to make sure we didn't break anything
+运行测试一下
+
+1055
+00:42:30,376 --> 00:42:34,110
+by doing that, and it looks like we're in good shape.
+看起来 OK
+
+1056
+00:42:34,112 --> 00:42:35,295
+Okay?
+
+1057
+00:42:35,296 --> 00:42:36,479
+But these things can still tilt.
+但是这些东西还是会倾斜
+
+1058
+00:42:36,481 --> 00:42:40,216
+They're still, you know, getting out of their little
+它们仍然弹出了规定列
+
+1059
+00:42:40,218 --> 00:42:42,451
+columns, and they're also not bouncing very much.
+并且也没弹那么高
+
+1060
+00:42:42,453 --> 00:42:44,319
+So let's get back to fixing that.
+回到那里，实现它
+
+1061
+00:42:44,321 --> 00:42:46,254
+And now, whenever I wanna add a new behavior,
+现在，无论何时我想添加一个新的 behavior
+
+1062
+00:42:46,256 --> 00:42:48,489
+I'm gonna add it in this behavior class.
+只要在这个类修改就可以了
+
+1063
+00:42:49,525 --> 00:42:51,325
+So, what kind of behavior is that?
+什么类型的 behavior
+
+1064
+00:42:51,327 --> 00:42:53,527
+I'm gonna do lazy var again here.
+再来一个 lazy 变量
+
+1065
+00:42:53,529 --> 00:42:56,429
+I'm gonna call it my dropBehavior,
+起名为 dropBehavior
+
+1066
+00:42:56,431 --> 00:43:00,099
+it's a UIDynamicItemBehavior.
+类型为 UIDynamicItemBehavior
+
+1067
+00:43:00,101 --> 00:43:01,667
+Okay? I'm gonna do the same
+同样的黑魔法
+
+1068
+00:43:01,669 --> 00:43:05,604
+magical trick, it's not that magical, and
+其实也没那么神奇
+
+1069
+00:43:05,606 --> 00:43:10,809
+I'm going to say let a lazilyCreatedDropBehavior.
+let lazilyCreatedDropBehavior
+
+1070
+00:43:10,811 --> 00:43:12,310
+I'm just using this name to
+起这个名字是为了
+
+1071
+00:43:12,312 --> 00:43:14,612
+really make it clear to you what's happening here.
+让你们理解这里发生了什么
+
+1072
+00:43:14,614 --> 00:43:19,983
+It's a UIDynamicItemBehavior and I'm doing this again cuz
+它的类型是 UIDynamicItemBehavior
+
+1073
+00:43:19,985 --> 00:43:22,585
+I want to configure it just like I did for the collider.
+我这样做，是想和设置 collider 一样，设置它
+
+1074
+00:43:22,587 --> 00:43:25,154
+And so let's do it so that things can't rotate.
+在这里让方块不再旋转
+
+1075
+00:43:25,156 --> 00:43:28,524
+So one of the things you can do is allowsRotation false.
+把 allowsRotation 设置为 false
+
+1076
+00:43:28,526 --> 00:43:29,875
+'Kay?
+
+1077
+00:43:29,876 --> 00:43:31,225
+Another thing you can do is the bounciness,
+另一件事是弹跳高度
+
+1078
+00:43:31,228 --> 00:43:32,927
+which is the elasticity.
+就是 elasticity
+
+1079
+00:43:32,929 --> 00:43:35,663
+So I'm gonna set the elasticity to about 0.75.
+设置成 0.75
+
+1080
+00:43:35,665 --> 00:43:39,700
+Elasticity of 1.0 is perfect elasticity.
+设置为 1.0 是完全失重
+
+1081
+00:43:39,702 --> 00:43:41,902
+So a thing bounces off something, it will have the
+弹跳的时候
+
+1082
+00:43:41,904 --> 00:43:46,039
+same amount of energy coming off as it had coming in, 'kay?
+能量完全不损失
+
+1083
+00:43:46,041 --> 00:43:47,373
+Perfect [INAUDIBLE], so 0.7,
+完全失重
+
+1084
+00:43:47,375 --> 00:43:49,241
+these things will eventually settle down.
+0.75表示这些东西最终会安定下来
+
+1085
+00:43:50,544 --> 00:43:52,010
+Okay? So there's that,
+好了
+
+1086
+00:43:52,012 --> 00:43:55,346
+we will return our lazilyCreatedDropBehavior
+返回 lazilyCreatedDropBehavior
+
+1087
+00:43:55,348 --> 00:43:55,913
+here.
+
+1088
+00:43:55,915 --> 00:43:58,882
+And so all we need to do to make that work, again,
+还需要做的事情是
+
+1089
+00:43:58,884 --> 00:44:00,717
+is add it as a child behavior here.
+把它添加为 child behavior
+
+1090
+00:44:00,719 --> 00:44:06,089
+Oops, drop behavior, and
+dropBehavior
+
+1091
+00:44:06,091 --> 00:44:10,526
+also make sure that we add any drops to it aswell.
+确保把 drop 也添加了
+
+1092
+00:44:10,528 --> 00:44:13,462
+DropBehavior.addItem, the drop, and
+DropBehavior.addItem 参数为 drop
+
+1093
+00:44:13,464 --> 00:44:15,130
+same thing down here.
+下面也是一样
+
+1094
+00:44:16,066 --> 00:44:19,233
+DropBehavior.removeItem, the drop.
+DropBehavior.removeItem 参数 drop
+
+1095
+00:44:19,235 --> 00:44:21,135
+Okay?
+
+1096
+00:44:21,136 --> 00:44:23,036
+So we don't have to change anything in the other place.
+在其它地方我们不需要改变
+
+1097
+00:44:23,039 --> 00:44:25,372
+Okay, back over here, we change nothing,
+回到这里，什么也不改
+
+1098
+00:44:25,374 --> 00:44:27,474
+because we're only changing behaviors here.
+因为我们只需要改变 behavior
+
+1099
+00:44:27,476 --> 00:44:30,276
+So this code has delegated all its behavior off to
+这个代码把所有的 behavior 交给了
+
+1100
+00:44:30,278 --> 00:44:32,028
+the dropIt behavior.
+DropItBehavior
+
+1101
+00:44:32,029 --> 00:44:33,779
+Question? >> [INAUDIBLE] How come like,
+[学生提问]
+
+1102
+00:44:33,781 --> 00:44:36,782
+we can, I guess, use the lazy variables in our init if
+[学生提问]
+
+1103
+00:44:36,784 --> 00:44:40,686
+they're not created until init is finished, you know?
+[学生提问]
+
+1104
+00:44:40,688 --> 00:44:44,022
+>> Well, it's, so the question is how can I do this,
+问题是
+
+1105
+00:44:44,024 --> 00:44:46,107
+basically?
+
+1106
+00:44:46,108 --> 00:44:48,191
+How am I allowed, during initialization, to, you know,
+我怎么可以在初始化的时候这样做呢？
+
+1107
+00:44:48,194 --> 00:44:49,360
+not have this set?
+先不让它被设定好
+
+1108
+00:44:49,362 --> 00:44:50,728
+And well, and the answer is,
+答案是
+
+1109
+00:44:50,730 --> 00:44:52,262
+it's a feature of the language.
+这是语言的特性
+
+1110
+00:44:52,264 --> 00:44:56,232
+It will suspend the rule that says that all things must be
+它会延缓初始化的过程
+
+1111
+00:44:56,234 --> 00:45:00,102
+initialized as long as you've set it to something that
+直到你开始引用它
+
+1112
+00:45:00,104 --> 00:45:02,738
+can be you know, determined later.
+在之后初始化
+
+1113
+00:45:02,740 --> 00:45:05,307
+So lazy variables, if they're marked lazy,
+对于 lazy 变量
+
+1114
+00:45:05,309 --> 00:45:07,976
+they don't have to be initialized at init time.
+在初始化的时候，它们不需要被初始化
+
+1115
+00:45:07,978 --> 00:45:09,477
+That's what lazy means,
+这就是 lazy 的意思
+
+1116
+00:45:09,479 --> 00:45:12,279
+does not have to be initialized at init time.
+不需要在初始化的时候被初始化
+
+1117
+00:45:12,281 --> 00:45:13,914
+But the first time someone accesses it,
+直到某人引用它
+
+1118
+00:45:13,916 --> 00:45:16,116
+it's going to be initialized, even if it wasn't a closure.
+它才会被初始化，即使它不是闭包
+
+1119
+00:45:16,118 --> 00:45:18,752
+Even if we set it to be equal to something else,
+即使我们把它设置为等于其它东西
+
+1120
+00:45:18,754 --> 00:45:22,621
+that would happen at the time someone accesses it.
+它会在某人引用它的时候被创建
+
+1121
+00:45:22,623 --> 00:45:23,822
+That's going to have to be,
+这就表明
+
+1122
+00:45:23,824 --> 00:45:26,558
+by definition, after the full initialization.
+在完全初始化之后
+
+1123
+00:45:26,560 --> 00:45:29,060
+Because no one can access any properties until full
+因为在完全初始化完毕之前
+
+1124
+00:45:29,062 --> 00:45:29,727
+initialization.
+没人可以引用属性
+
+1125
+00:45:29,729 --> 00:45:31,629
+Make sense?
+听懂了吗
+
+1126
+00:45:31,631 --> 00:45:33,281
+Okay?
+
+1127
+00:45:33,282 --> 00:45:34,932
+If you have more questions I could cover it more, but
+如果你还有问题，我也可以再说一些
+
+1128
+00:45:34,934 --> 00:45:36,733
+that's the basic deal on the lazies.
+这是 lazy 最基本的特点
+
+1129
+00:45:36,735 --> 00:45:37,867
+Yeah?
+
+1130
+00:45:37,869 --> 00:45:41,904
+So previous to that there were some small gaps,
+[学生提问]
+
+1131
+00:45:41,906 --> 00:45:46,475
+S and Q, sets the size of the general view to be equal to
+[学生提问]
+
+1132
+00:45:46,477 --> 00:45:51,413
+the size of the whole content divided by like [INAUDIBLE].
+[学生提问]
+
+1133
+00:45:51,415 --> 00:45:53,314
+>> There were no gaps along top.
+在顶部没有间隔
+
+1134
+00:45:53,316 --> 00:45:54,749
+It was only when they started falling and
+它只有在掉落并且
+
+1135
+00:45:54,751 --> 00:45:57,217
+tilting a little that they made gaps between each other.
+倾斜一点的时候它们之间才有间隔
+
+1136
+00:45:58,253 --> 00:45:59,552
+Watch, okay?
+看
+
+1137
+00:45:59,554 --> 00:46:02,521
+So here, look how much springier now we are.
+现在看起来多有弹性
+
+1138
+00:46:02,523 --> 00:46:04,857
+And also notice they can't tilt, so
+现在也不能倾斜了
+
+1139
+00:46:04,859 --> 00:46:06,358
+they stay in their columns.
+它们就在固定的列中
+
+1140
+00:46:06,360 --> 00:46:07,792
+You're gonna see there's no gaps now.
+之间没有间隔了
+
+1141
+00:46:08,795 --> 00:46:11,295
+Okay, it was only the tilting that was causing them to
+只有倾斜会让
+
+1142
+00:46:11,297 --> 00:46:12,963
+have gaps.
+它们之间产生间隔
+
+1143
+00:46:12,964 --> 00:46:14,630
+So, you can send these things down,
+让它们掉落
+
+1144
+00:46:14,631 --> 00:46:16,297
+there bouncing off each other and also off the bottom.
+它们会在底部和彼此之间弹跳
+
+1145
+00:46:17,502 --> 00:46:19,869
+Okay? And they eventually
+最后
+
+1146
+00:46:19,871 --> 00:46:20,703
+settle into stasis.
+它们会停下来
+
+1147
+00:46:22,406 --> 00:46:22,971
+Okay?
+
+1148
+00:46:24,307 --> 00:46:25,807
+Everybody got that?
+每个人都懂了吗
+
+1149
+00:46:25,809 --> 00:46:27,525
+All right? The next thing we're gonna do
+下一步要做的是
+
+1150
+00:46:27,526 --> 00:46:29,242
+in our fun game is, we're going to do a Tetris-like
+做一个像俄罗斯方块一样类似的效果
+
+1151
+00:46:29,245 --> 00:46:34,047
+thing, which is, when a row is fully clear, question?
+当一行满了以后，消除
+
+1152
+00:46:34,049 --> 00:46:36,266
+Yeah? >> Why
+[学生提问]
+
+1153
+00:46:36,267 --> 00:46:38,484
+are all the boxes completely aligned horizontally?
+[学生提问]
+
+1154
+00:46:38,487 --> 00:46:39,786
+>> Why are they completely aligned horizontally?
+它们在水平方向是对齐的吗？
+
+1155
+00:46:39,788 --> 00:46:40,887
+>> Well, they're not.
+它们不是
+
+1156
+00:46:40,888 --> 00:46:41,987
+Like, some of them are a little higher.
+有一些高一点
+
+1157
+00:46:41,989 --> 00:46:43,589
+>> Oh, yeah, why are there slight differences?
+为什么有轻微的差异
+
+1158
+00:46:43,591 --> 00:46:48,193
+Well, I'm not a 100% sure of why that is.
+我不是百分百确定
+
+1159
+00:46:48,195 --> 00:46:52,730
+I think it's because, and don't quote me on this 100%,
+我认为
+
+1160
+00:46:52,732 --> 00:46:54,932
+but I think it's because when the thing is animating,
+当它们在做动画效果是
+
+1161
+00:46:54,934 --> 00:46:57,901
+it's not animating on integer boundaries, okay?
+分界线不是整数
+
+1162
+00:46:57,903 --> 00:47:00,970
+And I think the things can slightly overlap by tiny
+它们的一小部分
+
+1163
+00:47:00,972 --> 00:47:01,604
+fractions.
+会重叠
+
+1164
+00:47:01,606 --> 00:47:03,840
+But it's enough for
+这足以让它们
+
+1165
+00:47:03,841 --> 00:47:06,075
+one or more to draw slightly one pixel or point off.
+在绘图的时候产生一个像素或点的偏差
+
+1166
+00:47:06,077 --> 00:47:06,642
+That make sense?
+有道理吧
+
+1167
+00:47:07,778 --> 00:47:08,543
+But that's a good question.
+好问题
+
+1168
+00:47:08,545 --> 00:47:10,629
+I've noticed that as well, and
+我也注意到了
+
+1169
+00:47:10,630 --> 00:47:12,714
+it's like right in here, see those two guys right there?
+看这里的这两个
+
+1170
+00:47:12,716 --> 00:47:13,614
+Slightly different.
+有轻微的不同
+
+1171
+00:47:14,617 --> 00:47:15,849
+So yeah, good question there.
+好问题
+
+1172
+00:47:17,085 --> 00:47:19,419
+All right, back to where we were here.
+回到我们这里
+
+1173
+00:47:20,588 --> 00:47:23,188
+So what I wanna do is remove a whole row when
+我想做的是
+
+1174
+00:47:23,190 --> 00:47:27,125
+a row is complete and when my animation settles down.
+当稳定下来以后，一行被填满了，把这行消掉
+
+1175
+00:47:27,127 --> 00:47:30,261
+Okay, when my animation stops, pauses, and
+当动画停止的时候
+
+1176
+00:47:30,263 --> 00:47:33,164
+a whole row is full, I want to remove it.
+一行满了，把这行去掉
+
+1177
+00:47:33,166 --> 00:47:36,067
+Okay? So how am I gonna do that?
+该怎样实现
+
+1178
+00:47:36,068 --> 00:47:38,969
+Well, I have a nice function called removeCompletedRow
+创建一个新方法 removeCompletedRow
+
+1179
+00:47:38,971 --> 00:47:44,341
+which I'm gonna type in really fast, again, here it is.
+快速输入
+
+1180
+00:47:44,343 --> 00:47:45,508
+Don't worry about this,
+别担心
+
+1181
+00:47:45,510 --> 00:47:47,109
+you can look at this after lecture.
+在课后你也可以看到这个 
+
+1182
+00:47:47,111 --> 00:47:50,079
+It's not doing anything except for looking for
+它只做一些
+
+1183
+00:47:50,081 --> 00:47:53,615
+rows that are full, and when it finds a row that's full,
+寻找哪一行是满的，然后遍历这一行
+
+1184
+00:47:53,617 --> 00:47:56,084
+it goes through and calls removeDraw.
+调用 removeDrop
+
+1185
+00:47:56,086 --> 00:47:58,586
+Right, in my dropping behavior on all of the things
+对于我 drop behavior 中的
+
+1186
+00:47:58,588 --> 00:47:59,186
+in the row.
+每一个
+
+1187
+00:47:59,188 --> 00:47:59,820
+That's all it does.
+这就是它做的
+
+1188
+00:47:59,822 --> 00:48:02,289
+Okay?
+
+1189
+00:48:02,290 --> 00:48:04,757
+All this is just finding the ones that are all in a row, or
+这是寻找一行中
+
+1190
+00:48:04,760 --> 00:48:07,293
+that complete a row or mostly complete a row.
+是满的那种情况
+
+1191
+00:48:07,295 --> 00:48:09,629
+It allows a little bit of gaps in there.
+它允许其中有一些小小的间隔
+
+1192
+00:48:09,631 --> 00:48:10,629
+And then this just removes it.
+接着，移除它
+
+1193
+00:48:10,631 --> 00:48:12,097
+It only removes one row though.
+它只会删除一行
+
+1194
+00:48:12,099 --> 00:48:13,799
+It starts at the bottom,
+从底部开始
+
+1195
+00:48:13,801 --> 00:48:15,867
+starts going up til it finds a row and then it removes it.
+找到一行删除一行
+
+1196
+00:48:15,869 --> 00:48:16,501
+So it only does one.
+一次一行
+
+1197
+00:48:17,603 --> 00:48:19,820
+All right?
+
+1198
+00:48:19,821 --> 00:48:22,038
+Now, how do we get this remover completed row called?
+我们在哪里调用这个方法？
+
+1199
+00:48:22,041 --> 00:48:24,108
+Okay, well,
+
+1200
+00:48:24,109 --> 00:48:26,176
+I'm gonna call it when the animation settles down.
+我将在动画停下来的时候调用
+
+1201
+00:48:26,178 --> 00:48:29,112
+And I told you that I can find that out using my dynamic
+我们可以使用 dynamic animator 的代理方法
+
+1202
+00:48:29,114 --> 00:48:30,580
+animator's delegate.
+
+1203
+00:48:30,582 --> 00:48:34,216
+So, here's my dynamic animator right here being created.
+这是我创建的 dynamic animator
+
+1204
+00:48:34,218 --> 00:48:36,251
+I'm actually just right here gonna say.
+把它的代理
+
+1205
+00:48:36,253 --> 00:48:40,989
+Make my dynamic animator's delegate, be myself.
+设置为我自己
+
+1206
+00:48:40,991 --> 00:48:42,623
+Okay? And of course we know that's
+当然
+
+1207
+00:48:42,625 --> 00:48:43,991
+going to cause an error.
+这会引发一个错误
+
+1208
+00:48:43,993 --> 00:48:45,526
+Right here. And that error is,
+在这里
+
+1209
+00:48:45,528 --> 00:48:48,428
+you don't implement the UIDynamicAnimatorDelegate
+错误是没有实现 UIDynamicAnimatorDelegate 的协议
+
+1210
+00:48:48,430 --> 00:48:49,095
+protocol.
+
+1211
+00:48:49,097 --> 00:48:52,198
+So okay, no problem.
+没问题
+
+1212
+00:48:52,200 --> 00:48:53,499
+UIDynamicAnimatorDelegate.
+
+1213
+00:48:53,501 --> 00:48:54,199
+Okay?
+
+1214
+00:48:54,201 --> 00:48:55,767
+Problem solved.
+问题解决
+
+1215
+00:48:55,769 --> 00:48:58,269
+There's only two methods in that protocol.
+协议中只有两个方法
+
+1216
+00:48:58,271 --> 00:48:59,137
+They're both optional.
+都是可选的
+
+1217
+00:48:59,139 --> 00:49:00,871
+You don't have to implement them.
+不需要都实现
+
+1218
+00:49:00,873 --> 00:49:04,708
+The one we want is dynamicAnimatorDidPause.
+其中之一是 dynamicAnimatorDidPause
+
+1219
+00:49:04,710 --> 00:49:06,710
+See, here's the two methods.
+这是这两个方法
+
+1220
+00:49:06,712 --> 00:49:08,144
+We want this one, DidPause.
+我需要这个
+
+1221
+00:49:08,146 --> 00:49:09,679
+So when it pauses, in other words,
+当它停下来的时候
+
+1222
+00:49:09,681 --> 00:49:13,482
+it's reached stasis, for now anyway, it's gonna pause.
+换句话说，停滞的时候
+
+1223
+00:49:13,484 --> 00:49:17,118
+And when it pauses, I'm going to remove CompletedRow and
+停下来的时候，调用 removeCompletedRow
+
+1224
+00:49:17,120 --> 00:49:18,019
+that's it.
+就是这样
+
+1225
+00:49:19,188 --> 00:49:20,487
+Nothing else required.
+不需要其他
+
+1226
+00:49:20,489 --> 00:49:21,555
+So we'll see if that works.
+看看有没有效果
+
+1227
+00:49:23,291 --> 00:49:24,991
+Alright, so put a bunch of drops down here.
+掉一堆方块下去
+
+1228
+00:49:24,993 --> 00:49:29,962
+Now if it comes to stasis but there is no completed
+当它停下来
+
+1229
+00:49:29,964 --> 00:49:32,631
+row which there isn't because there's gaps in this row,
+我们还没有完成一行
+
+1230
+00:49:32,633 --> 00:49:34,650
+it does nothing.
+所以它什么都没做
+
+1231
+00:49:34,651 --> 00:49:36,668
+But if I throw some more down here, enough that it completes
+再放下一些
+
+1232
+00:49:36,670 --> 00:49:39,470
+a row, which this is going to complete a row.
+完成了一行
+
+1233
+00:49:39,472 --> 00:49:42,440
+Okay. Once it settles and pauses,
+当它停下来的时候
+
+1234
+00:49:42,442 --> 00:49:46,576
+then it will remove the drops and the other ones will fall.
+它会移除这一行，其他的将会掉落下来
+
+1235
+00:49:46,578 --> 00:49:47,544
+Okay?
+
+1236
+00:49:47,545 --> 00:49:48,511
+Now, the two things to notice here.
+有两点值得注意
+
+1237
+00:49:48,513 --> 00:49:50,079
+One, it waited till we paused.
+一，它等到完全停下来
+
+1238
+00:49:50,081 --> 00:49:51,013
+That was cool.
+这很酷
+
+1239
+00:49:51,015 --> 00:49:52,781
+Two, after it removed them,
+二，移除它们以后
+
+1240
+00:49:52,783 --> 00:49:54,950
+everything else started animating again.
+所有的东西又再次开始动画
+
+1241
+00:49:54,952 --> 00:49:57,118
+Because nothing was underneath them.
+因为它们下面没有东西
+
+1242
+00:49:57,120 --> 00:50:00,855
+Gravity kept pulling them down and they fell.
+重力使它们下坠
+
+1243
+00:50:00,857 --> 00:50:02,189
+Okay? I didn't do anything
+我什么都没做
+
+1244
+00:50:02,191 --> 00:50:03,490
+to say keep going.
+“继续”啊之类的也没有
+
+1245
+00:50:03,492 --> 00:50:06,126
+It's just as soon as the gravity could work on those
+直到重力发现它可以工作了
+
+1246
+00:50:06,128 --> 00:50:08,027
+things, they started working.
+它就会工作
+
+1247
+00:50:08,029 --> 00:50:09,295
+Okay? It's important to notice
+对于 behavior
+
+1248
+00:50:09,297 --> 00:50:11,263
+the animator, even if it's paused,
+即使动画停止了
+
+1249
+00:50:11,265 --> 00:50:14,132
+it's always waiting for a behavior to do something.
+它也在等着时机，看能不能做一些是事情
+
+1250
+00:50:14,134 --> 00:50:14,699
+Okay?
+
+1251
+00:50:15,635 --> 00:50:16,934
+So that's cool,
+这很酷
+
+1252
+00:50:16,935 --> 00:50:18,234
+and this happens even if I have multiple rows, so
+如果我有多行
+
+1253
+00:50:18,237 --> 00:50:20,404
+let's just make it so there's a whole bunch of rows.
+多掉一些，填充多行
+
+1254
+00:50:20,406 --> 00:50:21,471
+That are complete and
+完成了
+
+1255
+00:50:22,774 --> 00:50:27,043
+you'll see that it will remove a row and
+你会发现它会先移除一行
+
+1256
+00:50:27,045 --> 00:50:29,278
+then it will pause again and it'll just remove another row.
+然后它会再次暂停，移除另一行
+
+1257
+00:50:29,280 --> 00:50:34,516
+Okay, and you know,
+你知道
+
+1258
+00:50:34,518 --> 00:50:36,951
+depending on how many things are stacked up and
+取决于这个方块是怎样罗列起来的
+
+1259
+00:50:36,953 --> 00:50:38,953
+how it does, you'll have different response to it.
+会造成不同的反应
+
+1260
+00:50:38,955 --> 00:50:40,254
+Okay?
+
+1261
+00:50:40,256 --> 00:50:42,489
+Now, let's go back and make it so
+回到这里
+
+1262
+00:50:42,491 --> 00:50:44,758
+they can rotate and let's see what happens again.
+如果让它们可以旋转呢，会发生什么
+
+1263
+00:50:44,760 --> 00:50:46,426
+So, how can we make it rotate?
+如何让它们旋转
+
+1264
+00:50:46,428 --> 00:50:47,827
+Trivial.
+这一点
+
+1265
+00:50:47,828 --> 00:50:49,227
+We just go back to here and just turn this,
+来到这里
+
+1266
+00:50:49,230 --> 00:50:54,032
+allows rotation, back to true, which is the default, okay?
+把它改为默认的 true
+
+1267
+00:50:54,034 --> 00:50:54,733
+And run again.
+再次运行
+
+1268
+00:50:56,036 --> 00:50:57,535
+'Kay.
+
+1269
+00:50:57,537 --> 00:50:58,969
+So let's put a bunch of them down here again.
+多掉下来一些
+
+1270
+00:50:58,971 --> 00:51:01,038
+Now they're gonna start banging into the edges of each
+它们会到处碰装
+
+1271
+00:51:01,040 --> 00:51:02,772
+other, and they'll start rotating and
+会开始旋转
+
+1272
+00:51:02,774 --> 00:51:05,575
+bouncing around all over the place, right?
+到处弹跳
+
+1273
+00:51:05,577 --> 00:51:07,910
+But they're still filling up rows.
+但它们还会填满一行
+
+1274
+00:51:07,912 --> 00:51:08,944
+'Kay?
+
+1275
+00:51:08,946 --> 00:51:10,012
+'Kay?
+
+1276
+00:51:10,014 --> 00:51:11,446
+See? They're kinda bouncing around?
+它们还会弹起
+
+1277
+00:51:16,586 --> 00:51:17,618
+There we go.
+好啦
+
+1278
+00:51:17,620 --> 00:51:18,652
+Okay. Too big of
+这中间
+
+1279
+00:51:18,653 --> 00:51:19,685
+a gap on that last one.
+间隔太大了
+
+1280
+00:51:19,688 --> 00:51:21,955
+And if I put more down here, I'll get again.
+如果再放一些，会消掉的
+
+1281
+00:51:21,957 --> 00:51:23,122
+Okay?
+
+1282
+00:51:23,124 --> 00:51:24,474
+Everybody cool with that?
+都懂了吗
+
+1283
+00:51:24,475 --> 00:51:25,825
+Understand what's going on there with that pausing
+理解暂停那一下发生的事情
+
+1284
+00:51:25,827 --> 00:51:27,426
+business and the fact that the animator is
+还有 animator 一直试图
+
+1285
+00:51:27,428 --> 00:51:28,994
+always trying to continue animating?
+继续动画
+
+1286
+00:51:28,996 --> 00:51:29,861
+Okay.
+
+1287
+00:51:29,863 --> 00:51:32,530
+All right.
+
+1288
+00:51:32,532 --> 00:51:34,665
+The next thing, I think we have time for
+下一项内容，应该还有时间
+
+1289
+00:51:34,667 --> 00:51:37,567
+both of these things, the next thing we're gonna do is
+下一项
+
+1290
+00:51:40,205 --> 00:51:42,605
+let's talk about this collider a little more right now.
+我们深入讨论一下碰撞
+
+1291
+00:51:42,607 --> 00:51:45,341
+The collider is only colliding with each other and
+现在它只会彼此碰撞
+
+1292
+00:51:45,343 --> 00:51:47,076
+colliding with the walls.
+还有和墙碰撞
+
+1293
+00:51:47,078 --> 00:51:49,444
+What if I wanna put something right, like a big,
+如果我想在其中添加一个大的
+
+1294
+00:51:49,446 --> 00:51:52,347
+I'm gonna put a circle right in the center of my.
+圆形，在 view 的中间
+
+1295
+00:51:52,349 --> 00:51:55,216
+View and have the things hit that and bounce off.
+使得方块撞击它，然后弹开
+
+1296
+00:51:55,218 --> 00:51:57,752
+So how do I create an arbitrary boundary, basically?
+我怎样能够创建一个任意的边界呢
+
+1297
+00:51:57,754 --> 00:52:00,087
+Well, the boundaries are created using bezier paths,
+可以通过 berizerpath 来创建边界
+
+1298
+00:52:00,089 --> 00:52:01,188
+as I said.
+
+1299
+00:52:01,190 --> 00:52:03,723
+And you can create a boundary,
+你可以创建一个边界
+
+1300
+00:52:03,725 --> 00:52:06,125
+it doesn't have to have any graphical representation.
+它不有任何图形代表
+
+1301
+00:52:06,127 --> 00:52:07,526
+So, in fact, I'm gonna start by doing that.
+现在开始
+
+1302
+00:52:07,528 --> 00:52:10,796
+So I'm gonna go to my drop it behavior right here.
+回到这个类中
+
+1303
+00:52:10,798 --> 00:52:14,333
+And I'm gonna make public a method, I'm gonna create
+写一个共有方法
+
+1304
+00:52:14,335 --> 00:52:17,235
+a public method to add a boundary, okay?
+用它创建一个边界
+
+1305
+00:52:17,237 --> 00:52:19,771
+So I'm gonna call it addBarrier actually cause
+起名为 addBarrier
+
+1306
+00:52:19,773 --> 00:52:21,772
+it's gonna add a barrier somewhere,
+因为它会在某处
+
+1307
+00:52:21,774 --> 00:52:25,709
+a barrier to these things coming down or whatever.
+添加一个 Barrier
+
+1308
+00:52:25,711 --> 00:52:29,746
+I'm going to call this, these things need to be named.
+这个边界需要被命名
+
+1309
+00:52:29,748 --> 00:52:31,547
+Remember I told you about the.
+还记得吗
+
+1310
+00:52:31,549 --> 00:52:33,816
+Barrier, or the boundaries.
+barrier 或者是边界
+
+1311
+00:52:33,818 --> 00:52:36,585
+They have like an integer, or a string, or whatever.
+它们需要有一个 integer 或者 string 类型的名字
+
+1312
+00:52:36,587 --> 00:52:38,987
+So I'm going to use a string to name these things.
+在这里我用 stirng
+
+1313
+00:52:38,989 --> 00:52:41,523
+So I'm going to pass in a Bezier path,
+传入一个 bezierpath
+
+1314
+00:52:41,525 --> 00:52:43,791
+and I'm going to name it.
+需要起名
+
+1315
+00:52:43,793 --> 00:52:45,926
+So I'm going to have an argument called name.
+所以需要一个 name 参数
+
+1316
+00:52:47,196 --> 00:52:48,429
+Okay? And
+
+1317
+00:52:48,430 --> 00:52:49,663
+I'm just going to call the colliders things and
+调用 collider
+
+1318
+00:52:49,665 --> 00:52:54,300
+you're going to remove any old boundary with that name.
+利用 name 参数去除之前旧的边界
+
+1319
+00:52:54,302 --> 00:52:57,570
+And then I'm just gonna add a new boundary,'kay?
+然后再添加一个新的边界
+
+1320
+00:52:57,572 --> 00:53:00,773
+Look at that name and that path.
+看这个 name 还有 path
+
+1321
+00:53:00,775 --> 00:53:02,158
+That's all I'm doing.
+这就是我在做的事情
+
+1322
+00:53:02,159 --> 00:53:03,542
+I'm just kind of making a nice simple method here
+在这里定义了一个方法
+
+1323
+00:53:03,544 --> 00:53:04,909
+that removes the old one and adds the new one.
+去掉之前旧的，然后添加一个新的
+
+1324
+00:53:04,911 --> 00:53:06,577
+So, it only,
+
+1325
+00:53:06,579 --> 00:53:09,046
+there's only gonna be one barrier with that name, and
+它只会利用这一个名字定义一个 barrier
+
+1326
+00:53:09,048 --> 00:53:11,982
+I can move it any time by just saying add barrier,'kay?
+我可以在任何时候移动它通过调用 addBarrier
+
+1327
+00:53:11,984 --> 00:53:13,950
+So add barrier removes the old version of it.
+然后 Barrier 就可以移除它的旧版本
+
+1328
+00:53:13,952 --> 00:53:14,884
+So that's add barrier.
+这就是这个方法
+
+1329
+00:53:14,886 --> 00:53:16,586
+[COUGH] And so.
+
+1330
+00:53:16,588 --> 00:53:18,954
+We can put that barrier in there.
+我们可以把 barrier 放在这里
+
+1331
+00:53:18,956 --> 00:53:20,255
+Invisibly.
+不可见的
+
+1332
+00:53:20,257 --> 00:53:24,426
+Let's put it maybe in our view did layout sub views.
+可以放进 viewDidLayoutSubViews 方法中
+
+1333
+00:53:24,428 --> 00:53:26,160
+So every time we change our bounds,
+任何时候改变 bounds 的时候
+
+1334
+00:53:26,162 --> 00:53:29,330
+we'll move this barrier to the very center of that.
+我们改变 barrier 到 view 的中央
+
+1335
+00:53:29,332 --> 00:53:32,366
+So I'm going to override view did layout sub views here.
+所以我在这里重写 viewDidLayoutSubViews
+
+1336
+00:53:32,368 --> 00:53:36,836
+Super ob views did labs sub views I want it right in
+super.viewDidLayoutSubViews
+
+1337
+00:53:36,838 --> 00:53:41,774
+the center, so I'm gonna, well let's have the size of it be,
+我希望它在最中间
+
+1338
+00:53:41,776 --> 00:53:44,043
+how about the same size as a drop?
+它的尺寸设置为和方块的尺寸一样怎么样
+
+1339
+00:53:44,045 --> 00:53:45,111
+Just to be simple.
+只是为了简单
+
+1340
+00:53:45,112 --> 00:53:46,178
+Okay, I'm gonna have this barrier that I'm gonna put in
+把和方块一样尺寸的 barrier
+
+1341
+00:53:46,180 --> 00:53:48,446
+the middle be the same size as a drop.
+放到 view 的中间
+
+1342
+00:53:48,448 --> 00:53:53,150
+I'm gonna have the origin of it be.
+让它的 origin 
+
+1343
+00:53:53,152 --> 00:53:55,386
+I keep this.
+
+1344
+00:53:55,388 --> 00:53:59,422
+Let's put it in the middle, so that's a game view, bounds,
+因为要放在中间，所以等于 
+
+1345
+00:53:59,424 --> 00:54:07,963
+mid-x minus the barrier's size.
+gameView.bounds.midX-BarrierSize.width/2
+
+1346
+00:54:07,965 --> 00:54:10,265
+Barrier-size dot width divided by two, and
+
+1347
+00:54:10,267 --> 00:54:12,167
+then the game view's.
+
+1348
+00:54:12,169 --> 00:54:13,335
+Bounds mid-Y,
+
+1349
+00:54:13,337 --> 00:54:17,071
+minus the barriers size dot height divided by two.
+gameView.bounds.midY-BarrierSize.height/2
+
+1350
+00:54:17,073 --> 00:54:20,374
+So I'm just putting it in the middle,'kay?
+把它放到中间
+
+1351
+00:54:22,011 --> 00:54:26,112
+So let's let this UI Bezier path that we're gonna create
+开始创建 UIBezierPath
+
+1352
+00:54:26,114 --> 00:54:28,047
+just be UI Bezier path.
+let path = UIBezierPath
+
+1353
+00:54:28,049 --> 00:54:31,316
+We'll make it a circle using oval in rect,'kay, and
+使用 ovalInRect 构造器
+
+1354
+00:54:31,318 --> 00:54:32,984
+we'll make a CG rect.
+创建一个 CGRect
+
+1355
+00:54:32,986 --> 00:54:36,354
+Which is the barrier origin and the barrier size.
+参数是 barrierOrigin 和 barrierSize
+
+1356
+00:54:40,226 --> 00:54:42,760
+Okay so everybody understand I created a Besian path,
+我创建了一个 bezierPaht
+
+1357
+00:54:42,762 --> 00:54:45,462
+that's a circle right in the middle that's the same size as
+是一个在屏幕中央和方块尺寸一致的
+
+1358
+00:54:45,464 --> 00:54:46,863
+a drop, okay?
+圆形
+
+1359
+00:54:46,865 --> 00:54:50,600
+And then I'm just going to tell my dropit behavior,
+然后我通知 dropItBehavior
+
+1360
+00:54:50,602 --> 00:54:51,634
+add this barrier.
+来添加这个 barrier
+
+1361
+00:54:53,104 --> 00:54:54,069
+And we'll call this barrier.
+调用这个 barrier
+
+1362
+00:54:54,071 --> 00:54:55,704
+Let's be good coders again.
+让我们成为一个好程序员！
+
+1363
+00:54:55,706 --> 00:54:56,771
+Let's say struct.
+struct
+
+1364
+00:54:56,773 --> 00:54:59,140
+We'll call these path names.
+PathNames
+
+1365
+00:54:59,142 --> 00:55:01,175
+Static.
+
+1366
+00:55:01,177 --> 00:55:07,781
+We'll call this one middle barrier or something.
+把它起名为 MiddleBarrier
+
+1367
+00:55:09,517 --> 00:55:12,451
+This is gonna be the string we use so here we'll go.
+这将会是我们使用的 string
+
+1368
+00:55:12,453 --> 00:55:16,054
+Path name dot middle barrier.
+PathName.MiddleBarrier
+
+1369
+00:55:16,056 --> 00:55:17,539
+Okay?
+
+1370
+00:55:17,540 --> 00:55:19,023
+So I can add this barrier right here and
+我在这里添加barrier
+
+1371
+00:55:19,026 --> 00:55:20,909
+that's all I need to do.
+这是我需要做的全部工作
+
+1372
+00:55:20,910 --> 00:55:22,793
+Once you add the barrier, the collider is already colliding
+一旦你添加了 barrier
+
+1373
+00:55:22,796 --> 00:55:24,662
+so it's going to make things collide with it.
+其他的物体就可以和它撞击
+
+1374
+00:55:24,664 --> 00:55:26,296
+So let's see what this looks like.
+让我们看看效果
+
+1375
+00:55:26,298 --> 00:55:27,620
+Okay?
+
+1376
+00:55:27,621 --> 00:55:28,943
+see if we can tell.
+看我们能不能看出来
+
+1377
+00:55:28,944 --> 00:55:30,266
+Oh, do you see things bouncing away from the middle there?
+看到物体被从中间弹开了吗
+
+1378
+00:55:30,269 --> 00:55:31,167
+See that?
+看到了吗
+
+1379
+00:55:31,169 --> 00:55:32,669
+[SOUND] Okay?
+
+1380
+00:55:32,671 --> 00:55:36,638
+But it's a little bit bad because we can't see it.
+有一点不好，就是我们看不到它
+
+1381
+00:55:36,640 --> 00:55:38,073
+I'd like to see this barrier.
+我想看到它
+
+1382
+00:55:38,075 --> 00:55:39,541
+But that's an independent thing.
+但是那是一个独立的东西
+
+1383
+00:55:39,543 --> 00:55:41,676
+Seeing it versus it being there is different.
+看到它和它在那里，是不同的
+
+1384
+00:55:41,678 --> 00:55:44,445
+So to see it I'm actually gonna make my background
+为了看到它
+
+1385
+00:55:44,447 --> 00:55:46,063
+view right here.
+我需要创建背景视图
+
+1386
+00:55:46,064 --> 00:55:47,680
+Instead of being a generic UI view I'm gonna make it
+这次不是一般的视图，而是
+
+1387
+00:55:47,683 --> 00:55:50,283
+be a view that can draw Bezier paths.
+可以画 bezierpath 的视图
+
+1388
+00:55:50,285 --> 00:55:51,852
+Okay? Now,
+
+1389
+00:55:51,853 --> 00:55:53,420
+this is surprisingly simple to do.
+这也很贱但
+
+1390
+00:55:53,422 --> 00:55:54,520
+Okay?
+
+1391
+00:55:54,522 --> 00:55:56,889
+I'm just going to create a UI view.
+创建一个 UIView 的
+
+1392
+00:55:56,891 --> 00:55:59,892
+Subclass, UI view.
+子类
+
+1393
+00:55:59,894 --> 00:56:02,894
+I'm going to call it BezierPathsView and it's
+起名为 BezierPathsView
+
+1394
+00:56:02,896 --> 00:56:06,531
+going to basically draw as many bezier paths as you want.
+你可以在上面画任意多的 bezierpath
+
+1395
+00:56:06,533 --> 00:56:12,403
+They'll also be named, just like the boundaries are named.
+这里也需要 name，就像边界有 name 一样
+
+1396
+00:56:12,405 --> 00:56:13,888
+Okay? And
+
+1397
+00:56:13,889 --> 00:56:15,372
+I'm going to do this by saying var bezierPaths,
+var bezierPahts
+
+1398
+00:56:15,374 --> 00:56:17,941
+these are my Bézier paths I'm going to have.
+这里装我们 bezierpath
+
+1399
+00:56:17,943 --> 00:56:22,645
+It's just going to be a dictionary with strings as
+类型是 string 为 key
+
+1400
+00:56:22,647 --> 00:56:27,616
+the keys and UIBezierPaths as the argument, okay?
+UIBezierPath 为参数的字典
+
+1401
+00:56:27,618 --> 00:56:29,151
+I'm going to, by the way,
+顺便地
+
+1402
+00:56:29,153 --> 00:56:32,487
+I haven't been doing private in the demo for expediency.
+在 demo 中我还没有使用过 privte 
+
+1403
+00:56:32,489 --> 00:56:34,288
+But, again, private is important and here,
+在这里，privete 是很重要的
+
+1404
+00:56:34,290 --> 00:56:36,457
+I am going to do the right privacy.
+我将使用正确的公私有属性
+
+1405
+00:56:36,459 --> 00:56:39,293
+So now, I'm going to have a function called,
+创建一个方法
+
+1406
+00:56:39,295 --> 00:56:40,811
+what did I call it?
+起名为什么来着
+
+1407
+00:56:40,812 --> 00:56:42,328
+Add path or something like that?
+addPath 之类的？
+
+1408
+00:56:42,331 --> 00:56:44,097
+Yeah, setPath.
+哦，setPath
+
+1409
+00:56:44,099 --> 00:56:46,666
+SetPath, and it's going to take a path,
+参数是 UIBezierPath 类型的
+
+1410
+00:56:46,668 --> 00:56:48,367
+which is a UI Bézier path.
+path
+
+1411
+00:56:48,369 --> 00:56:50,969
+It's going to be optional because we're going to allow
+它是可选的，因为我们可以允许你通过这个方法
+
+1412
+00:56:50,971 --> 00:56:52,537
+you to clear out paths if you want,
+清掉 path 如果你想的话
+
+1413
+00:56:52,539 --> 00:56:54,773
+and then it's also going to let them be named.
+然后需要 name 参数
+
+1414
+00:56:56,009 --> 00:56:58,075
+And I'm just going to put it in that dictionary,
+把它们放入字典中
+
+1415
+00:56:58,077 --> 00:57:00,377
+just going to say Bézier paths.
+bezierPahts[name] = path
+
+1416
+00:57:00,379 --> 00:57:03,847
+Path sub name equals the path.
+
+1417
+00:57:03,849 --> 00:57:07,183
+And of course, I just changed my model basically, so
+刚刚改变了模型
+
+1418
+00:57:07,185 --> 00:57:09,585
+I'm going to just setNeedsDisplay.
+所以现在需要调用 setNeedsDisplay
+
+1419
+00:57:09,587 --> 00:57:13,322
+Okay? Then, to draw this, for
+画出它们
+
+1420
+00:57:13,324 --> 00:57:20,962
+underscore path in my bezierPaths, path.stroke.
+for (_, path) in bezierPahts
+
+1421
+00:57:20,964 --> 00:57:23,181
+Okay, that's it.
+path.stroke
+
+1422
+00:57:23,182 --> 00:57:25,399
+This is the entire implementation of this view.
+这是整个 view 的实现
+
+1423
+00:57:25,402 --> 00:57:26,134
+Okay? It's just going to
+它将会以
+
+1424
+00:57:26,136 --> 00:57:27,201
+stroke them in black.
+空白的方式画出
+
+1425
+00:57:27,203 --> 00:57:28,769
+We could add colors and all this stuff, but
+我们也可以添加颜色
+
+1426
+00:57:28,771 --> 00:57:30,437
+we're just going to stroke them all in black.
+但空白的就行了
+
+1427
+00:57:30,439 --> 00:57:32,038
+This is a numeration of a dictionary,
+这是个字典的遍历
+
+1428
+00:57:32,040 --> 00:57:33,690
+hopefully you recognize that.
+希望你们看出来了
+
+1429
+00:57:33,691 --> 00:57:35,341
+I don't care what the name is here while I'm doing this,
+我不管 name 是什么
+
+1430
+00:57:35,343 --> 00:57:36,575
+I only care the name because
+我需要 name 是因为
+
+1431
+00:57:36,577 --> 00:57:38,677
+I want to keep them unique is all.
+我想让它们每个都是独一无二的
+
+1432
+00:57:38,679 --> 00:57:41,130
+Okay?
+
+1433
+00:57:41,131 --> 00:57:43,582
+So now what I'm going to do is go back to my storyboard, and
+现在回到 storyboard
+
+1434
+00:57:43,584 --> 00:57:45,583
+instead of this being a generic view,
+换掉这个一般的视图
+
+1435
+00:57:45,585 --> 00:57:48,219
+I'm going to go to the identity inspector, and
+去到 identity inspector
+
+1436
+00:57:48,221 --> 00:57:50,888
+turn it into a BezierPathsView.
+把它变成 BezierPathsView
+
+1437
+00:57:50,890 --> 00:57:54,258
+And also in my DropIt controller over here,
+在 DropIt 控制器中
+
+1438
+00:57:54,260 --> 00:57:57,160
+I'm going to change this outlet from being a generic
+把这个出口从一般的 view 改为
+
+1439
+00:57:57,162 --> 00:57:59,062
+UIView from being a BezierPathsView.
+BezierPathsView
+
+1440
+00:57:59,064 --> 00:58:02,231
+So now the view that I'm doing all this animation is in
+现在这个 view 既可以动画
+
+1441
+00:58:02,233 --> 00:58:05,001
+can draw arbitrary Bézier paths, okay?
+又能画任意的 bezierpath
+
+1442
+00:58:05,003 --> 00:58:06,201
+Very convenient because
+非常方便
+
+1443
+00:58:06,203 --> 00:58:08,070
+I'm going to have it draw that circle.
+我可以让它画圆
+
+1444
+00:58:08,072 --> 00:58:10,638
+Okay, that circle that we're having the collider do,
+在这里的圆
+
+1445
+00:58:10,640 --> 00:58:11,906
+which is right here.
+让它产生碰撞
+
+1446
+00:58:11,907 --> 00:58:13,173
+And I can do that with one line of code.
+一行代码就可以实现
+
+1447
+00:58:13,176 --> 00:58:16,444
+I'm just going to say gameView addPath,
+gameView.setPath
+
+1448
+00:58:16,446 --> 00:58:21,314
+or setPath, the same path, and I'll use even the same name,
+和上面相同的 path 和 name
+
+1449
+00:58:21,316 --> 00:58:24,351
+PathNames.MiddleBarrier, okay.
+
+1450
+00:58:24,353 --> 00:58:27,220
+The good thing now is every time viewDidLayoutSubview is
+好的一面就是每次 viewDidLayoutSubview 
+
+1451
+00:58:27,222 --> 00:58:28,921
+called, it'll replace, you know,
+被调用
+
+1452
+00:58:28,923 --> 00:58:32,324
+it'll move it to the middle and redraw it.
+它就会移动到中间然后重新绘制
+
+1453
+00:58:32,326 --> 00:58:33,225
+Okay? So let's now take
+现在看看效果
+
+1454
+00:58:33,227 --> 00:58:33,925
+a look at this.
+
+1455
+00:58:33,927 --> 00:58:36,527
+[COUGH] There it is.
+好了
+
+1456
+00:58:36,529 --> 00:58:37,328
+Now, we can see it.
+现在能看到了
+
+1457
+00:58:37,330 --> 00:58:39,063
+It's still a barrier,
+它仍然是一个 barrier
+
+1458
+00:58:39,065 --> 00:58:42,732
+like it was before, so something hit it, come on.
+和之前一样
+
+1459
+00:58:42,734 --> 00:58:44,300
+There we go, boom, okay?
+其他东西也会撞到它
+
+1460
+00:58:44,302 --> 00:58:46,102
+And, you know, it's a complete barrier.
+它是个完整的 barrier
+
+1461
+00:58:46,104 --> 00:58:50,138
+And it actually is along that Bézier path.
+它实际上是沿着这个 bezierpath
+
+1462
+00:58:50,140 --> 00:58:52,140
+It's not, you know, the square containing it.
+而不是这个圆圈包含着它
+
+1463
+00:58:52,142 --> 00:58:53,742
+It is actually on it.
+它实际上在边缘上
+
+1464
+00:58:53,743 --> 00:58:55,343
+So if I fill up this thing all the way to where it starts
+如果我把这里填满
+
+1465
+00:58:55,345 --> 00:58:56,628
+getting to that,
+
+1466
+00:58:56,629 --> 00:58:57,912
+you'll start seeing them tip right up against.
+你会看到它们完整地贴着它
+
+1467
+00:58:57,914 --> 00:59:01,448
+Do you see how they pile right up against it, there?
+看到了吗？
+
+1468
+00:59:01,450 --> 00:59:02,015
+Okay?
+
+1469
+00:59:03,118 --> 00:59:05,017
+So you can have an arbitrary Bézier path there.
+所以你可以绘制任意的 bezierPath
+
+1470
+00:59:06,487 --> 00:59:07,486
+Okay? And if I rotate.
+如果我旋转
+
+1471
+00:59:08,522 --> 00:59:10,321
+Okay, it'll put it in the middle.
+它将会出现在中间
+
+1472
+00:59:10,323 --> 00:59:11,822
+Okay, it zoomed it out a little bit but
+它放大了一点
+
+1473
+00:59:11,824 --> 00:59:14,792
+some of the things fell off the edge when I rotated that.
+有一些东西在我旋转之后掉出了屏幕
+
+1474
+00:59:14,794 --> 00:59:16,727
+Got to be careful of that in your game too.
+在游戏里也应该注意一下
+
+1475
+00:59:16,729 --> 00:59:19,329
+When you rotate,
+当你旋转的时候
+
+1476
+00:59:19,330 --> 00:59:21,930
+if your bouncing ball is not in the middle area then,
+如果你的球不在屏幕的中间部分
+
+1477
+00:59:21,933 --> 00:59:24,033
+it's going to be outside the boundary and so
+它会跳出边界
+
+1478
+00:59:24,035 --> 00:59:27,502
+it's going to fly off into outer space forever, okay?
+它会一直飞，飞到外太空的
+
+1479
+00:59:28,872 --> 00:59:30,838
+Okay, so that's how we do barriers.
+我们就是这么处理 barrier 的
+
+1480
+00:59:30,840 --> 00:59:32,273
+And you're going to have your bricks are going to
+你们也会创建砖块
+
+1481
+00:59:32,275 --> 00:59:34,659
+be probably not round,
+也许不是圆形的
+
+1482
+00:59:34,660 --> 00:59:37,044
+well they could be round if you want, and you can put as
+如果是圆的也可以
+
+1483
+00:59:37,046 --> 00:59:40,213
+many of these little barriers as you want up here, okay?
+你可以放任意多个障碍物在上面
+
+1484
+00:59:40,215 --> 00:59:42,248
+And when you hit one of these, that delegate method,
+当你击中其中一个的时候，代理方法
+
+1485
+00:59:42,250 --> 00:59:43,816
+you're going to set yourselves a collision delegate.
+你需要先设置代理
+
+1486
+00:59:43,818 --> 00:59:46,285
+I don't really have time to do that, but,
+我没有时间演示了
+
+1487
+00:59:46,287 --> 00:59:50,889
+you know, you could make it do something, flash or
+但你你可以制造一些效果
+
+1488
+00:59:50,891 --> 00:59:53,258
+animate, whatever is required by the required tasks.
+闪或者动，作业的一部分内容
+
+1489
+00:59:54,461 --> 00:59:56,927
+Okay, the last kind of behavior I'm going to show you
+最后一个 behavior 我要介绍给你们的是
+
+1490
+00:59:56,929 --> 00:59:58,262
+is an attachment behavior.
+attachment behavior
+
+1491
+00:59:58,264 --> 01:00:01,098
+So, the way I'm going to do this attachment,
+使用它的方式是
+
+1492
+01:00:01,100 --> 01:00:03,366
+let me show you here, is when a drop comes down,
+当方块掉落下来
+
+1493
+01:00:03,368 --> 01:00:06,002
+I'm going to be able to grab onto it with
+我会抓住它
+
+1494
+01:00:06,004 --> 01:00:09,338
+a piece of string, or more like a metal rod.
+就像抓住一跟金属棒一样
+
+1495
+01:00:09,340 --> 01:00:11,974
+Grab onto it and I can move it around, okay?
+抓住它到处移动
+
+1496
+01:00:11,976 --> 01:00:14,976
+Swing it around in a circle and let it fly if I want.
+让它转圈，或者让它飞走
+
+1497
+01:00:16,079 --> 01:00:17,395
+So, that's what I'm going to do.
+我将会这样实现
+
+1498
+01:00:17,396 --> 01:00:18,712
+I'm going to do that with an attachment behavior.
+利用 attachment behavior
+
+1499
+01:00:18,715 --> 01:00:21,382
+I'm just going to create an attachment from where I start
+先在拖动手势进行的时候
+
+1500
+01:00:21,384 --> 01:00:25,252
+my pan to the middle of the drop, the currently
+创建一个 attachment behavior 在方块中间
+
+1501
+01:00:25,254 --> 01:00:28,988
+dropping drop, or the last dropped drop, basically.
+正在掉落的或者最后一个掉落的
+
+1502
+01:00:28,990 --> 01:00:30,723
+And then as I pan around,
+在我滑动的时候
+
+1503
+01:00:30,725 --> 01:00:33,258
+I'm just going to move the anchor point.
+我会移动它的锚点
+
+1504
+01:00:33,260 --> 01:00:36,194
+And because animation is all happy instantaneously, it's
+因为动画发生在瞬间
+
+1505
+01:00:36,196 --> 01:00:39,197
+just going to all magically animate to adapt to the fact
+所以所有的动画都会神奇般地随着我改变它
+
+1506
+01:00:39,199 --> 01:00:42,833
+that I'm moving the anchor point of this attachment.
+的锚点而有效果
+
+1507
+01:00:42,835 --> 01:00:44,085
+Okay?
+
+1508
+01:00:44,086 --> 01:00:45,336
+And all the other behaviors are still going to work on it,
+其他的 behavior 还是会有效
+
+1509
+01:00:45,338 --> 01:00:47,337
+the gravity, the collisions,
+重力还有碰撞
+
+1510
+01:00:47,339 --> 01:00:48,571
+all still going to work on that thing.
+都会起作用
+
+1511
+01:00:48,573 --> 01:00:50,306
+The attachment's just going to be another behavior.
+连接是另外一个特性
+
+1512
+01:00:50,308 --> 01:00:52,608
+Now I'm going to put this attachment in the controller
+我会在控制器里添加这个attachment
+
+1513
+01:00:52,610 --> 01:00:54,443
+right here instead of in the behavior, just so
+而不是在 behavior 中
+
+1514
+01:00:54,445 --> 01:00:57,813
+you can see it all happening a little better.
+这样你们看得效果更好
+
+1515
+01:00:57,815 --> 01:01:00,715
+So let's do this kind of in multiple steps here.
+这中间有几步过程
+
+1516
+01:01:00,717 --> 01:01:03,818
+Let's go ahead and do the gesture first.
+先添加手势
+
+1517
+01:01:03,820 --> 01:01:07,088
+Okay, so to do the behavior, I need an attachment behavior,
+为了实现这个 behavior，我需要一个 attachment behavior
+
+1518
+01:01:07,090 --> 01:01:09,590
+so I'm going to create an attachment behavior here,
+所以我需要在这里创建一个 attachment behavior
+
+1519
+01:01:09,592 --> 01:01:11,758
+UI attachment behavior.
+类型是 UIAttachmentBehavior
+
+1520
+01:01:11,760 --> 01:01:14,527
+Now, this one's going to be an optional because I only have
+它是可选型的，因为只有我在
+
+1521
+01:01:14,529 --> 01:01:16,829
+this attachment when I'm panning.
+拖动的时候才会有这个属性
+
+1522
+01:01:16,831 --> 01:01:18,397
+Okay? I don't have this attach,
+我没有这个 attach
+
+1523
+01:01:18,399 --> 01:01:21,133
+it's nil basically, if I'm not currently attached to
+它是 nil 的，如果我没拖着什么到处晃
+
+1524
+01:01:21,135 --> 01:01:25,837
+something and panning around, whereas the dropping behavior
+然而 drop behavior 
+
+1525
+01:01:25,839 --> 01:01:27,605
+is happening all the time.
+会一直存在
+
+1526
+01:01:27,607 --> 01:01:29,057
+Okay?
+
+1527
+01:01:29,058 --> 01:01:30,508
+Again, I could put this attachment behavior
+我可以把 attachment behavior
+
+1528
+01:01:30,510 --> 01:01:31,475
+in the dropping behavior.
+放在 drop behavior 里
+
+1529
+01:01:31,477 --> 01:01:32,993
+I could do that.
+我可以这么做
+
+1530
+01:01:32,994 --> 01:01:34,510
+I'm not going to, for kind of seeing it on screen,
+但我不会这么做
+
+1531
+01:01:34,513 --> 01:01:38,148
+the code on screen issue, but I could put it over there.
+把它放到这里看起来更清楚
+
+1532
+01:01:38,150 --> 01:01:39,015
+So I'm going to put it here.
+所以我把它放到这里
+
+1533
+01:01:39,017 --> 01:01:40,550
+So I have this attachment.
+所以我有了 attachment
+
+1534
+01:01:40,551 --> 01:01:42,084
+We're going to have to do some things with this attachment in
+一会儿再对这个 attachment 做些事情
+
+1535
+01:01:42,086 --> 01:01:44,420
+a second, but let's just say we have this attachment.
+但是现在我们已经有了这个 attachment
+
+1536
+01:01:44,422 --> 01:01:47,122
+Let's go add that pan gesture.
+现在添加拖动手势
+
+1537
+01:01:47,124 --> 01:01:50,792
+Okay, so we'll go over here, we'll go to our storyboard.
+去到 storyboard
+
+1538
+01:01:50,794 --> 01:01:53,027
+Here's our storyboard right here.
+这里就是
+
+1539
+01:01:53,029 --> 01:01:55,096
+Let's go down and find pan.
+找到 pan
+
+1540
+01:01:55,098 --> 01:01:56,063
+Where is it?
+在哪呢 
+
+1541
+01:01:56,065 --> 01:01:58,365
+Pan? Right here.
+在这
+
+1542
+01:01:58,367 --> 01:01:59,966
+So let's add pan to this thing.
+给它添加 pan 手势
+
+1543
+01:01:59,968 --> 01:02:01,734
+Here's pan in the document outline.
+在 document outline 有 pan
+
+1544
+01:02:02,737 --> 01:02:05,204
+Let's go ahead and
+现在为 pan gesture
+
+1545
+01:02:05,205 --> 01:02:07,672
+put the pan gesture down here by the drop gesture, I guess.
+设置出口
+
+1546
+01:02:07,675 --> 01:02:09,741
+Okay, put her right there, okay,
+放到这里
+
+1547
+01:02:09,743 --> 01:02:13,645
+it's an action, we'll call it grabDrop.
+它是一个 action，起名为 grabDrop
+
+1548
+01:02:13,647 --> 01:02:14,779
+Okay, because that's what it's going to do,
+这就是它将要做的事情
+
+1549
+01:02:14,781 --> 01:02:17,781
+it's going to grab onto a drop okay, here it is.
+它将会捕获一个方块
+
+1550
+01:02:19,118 --> 01:02:22,385
+All right that's all we need to do in our UI here.
+在 UI 这里只需要做这些工作
+
+1551
+01:02:22,387 --> 01:02:26,722
+Let's go back to our drop the controller.
+回到控制器中
+
+1552
+01:02:26,724 --> 01:02:29,591
+All right, so how are we going to implement this grab drop?
+我们将如何实现这个方法呢
+
+1553
+01:02:29,593 --> 01:02:30,892
+All right, we have that attachment,
+我们有了 attachment
+
+1554
+01:02:30,894 --> 01:02:33,795
+basically all we need to do is, when we first start
+我们需要做的时
+
+1555
+01:02:33,797 --> 01:02:36,464
+our gesture, we need to create that attachment.
+当手势开始的时候，创建 attachment
+
+1556
+01:02:36,466 --> 01:02:37,765
+Then as it moves,
+移动的时候
+
+1557
+01:02:37,766 --> 01:02:39,065
+we're just going to move that anchor point.
+改变锚点的位置
+
+1558
+01:02:39,068 --> 01:02:40,100
+And when it ends,
+结束的时候
+
+1559
+01:02:40,102 --> 01:02:42,602
+we're going to set the attachment back to nil.
+把 attachment 设置为 nil
+
+1560
+01:02:42,604 --> 01:02:45,505
+So, this is incredibly easy to do.
+实现起来很容易
+
+1561
+01:02:45,507 --> 01:02:46,906
+You're finding all this, I hope,
+希望你们都理解
+
+1562
+01:02:46,908 --> 01:02:48,274
+to be pretty straightforward to do.
+这很容易理解
+
+1563
+01:02:48,276 --> 01:02:50,442
+It's a pretty amazing and powerful system.
+iOS 是个非常强大的系统
+
+1564
+01:02:50,444 --> 01:02:51,977
+But in this hand gesture, first,
+在 pan gesture 中
+
+1565
+01:02:51,979 --> 01:02:53,712
+I'm going to get the point.
+首先，获取点
+
+1566
+01:02:53,714 --> 01:02:55,913
+Okay? The gesture point,
+手势的点
+
+1567
+01:02:55,915 --> 01:02:59,116
+that is just the sender's location in our gainView.
+它就是 sender.locationInView 参数为 gameView
+
+1568
+01:03:02,555 --> 01:03:05,722
+All right, so now I know where that pan is.
+所以现在我知道了手势在哪里
+
+1569
+01:03:05,724 --> 01:03:09,225
+And I'm just going to switch on what state we're in with
+现在我需要判断这个手势
+
+1570
+01:03:09,227 --> 01:03:11,227
+this gesture.
+所处的状态
+
+1571
+01:03:11,228 --> 01:03:13,228
+And if we're in began, so if the thing just began,
+如果刚开始
+
+1572
+01:03:13,231 --> 01:03:14,763
+then I'm just going to create the attachment.
+我们需要创建这个 attachment
+
+1573
+01:03:14,765 --> 01:03:18,500
+So I'm going to say attachment equals UIAttachmentBehavior.
+attachment = UIAttachmentBehavior
+
+1574
+01:03:18,502 --> 01:03:20,669
+Now, here's all the ways you can attach things.
+这里是所有的构造方法
+
+1575
+01:03:20,671 --> 01:03:22,804
+You can attach between two items, between an item and
+你可以在两个物体之间连接，在一个物体和一个锚点上连接
+
+1576
+01:03:22,806 --> 01:03:23,771
+an anchor.
+
+1577
+01:03:23,773 --> 01:03:26,106
+You can even attach between two items or
+你也可以连接一个物体
+
+1578
+01:03:26,108 --> 01:03:29,543
+an anchor with offset from the center, which is kind of a fun
+以及一个锚点中心的偏移，这个很有趣
+
+1579
+01:03:29,545 --> 01:03:32,679
+one because if it can rotate, then as it spins around,
+因为它可以旋转
+
+1580
+01:03:32,681 --> 01:03:35,181
+it will be spinning around because the attachment's not
+attachment 并不是死死地
+
+1581
+01:03:35,183 --> 01:03:36,382
+dead in the center, right?
+呆在原点
+
+1582
+01:03:36,384 --> 01:03:38,617
+It's right off onto the side.
+它会在边上有一个偏移
+
+1583
+01:03:38,619 --> 01:03:39,851
+It's not in the middle of the square.
+不会再方块的中间
+
+1584
+01:03:39,853 --> 01:03:41,820
+It might be in the corner and so it kind of rotates.
+它也许在角落，所以可以旋转
+
+1585
+01:03:41,822 --> 01:03:43,238
+So that's kind of fun.
+还是很有趣的
+
+1586
+01:03:43,239 --> 01:03:44,655
+But, we're just going to do to the center here.
+在这里我只会实现在中间的
+
+1587
+01:03:44,657 --> 01:03:47,591
+And so, we need to attach the item.
+我们需要 attach 物体
+
+1588
+01:03:47,593 --> 01:03:49,860
+So we want this one right here to the anchor.
+我们选择这个 attachedToAnchor
+
+1589
+01:03:49,862 --> 01:03:51,061
+This is the one we want.
+这是我们需要的
+
+1590
+01:03:51,063 --> 01:03:53,363
+So the item, what item are we attaching to?
+item，我们需要 attach 什么东西
+
+1591
+01:03:53,365 --> 01:03:55,498
+Well, we're attaching to the last.
+我们将要 attach 最后一个
+
+1592
+01:03:55,500 --> 01:03:57,033
+DroppedView.
+掉落的方块
+
+1593
+01:03:57,035 --> 01:03:59,535
+So I'm gonna have to create a LastDroppedView,
+我会创建一个 LastDroppedView
+
+1594
+01:03:59,537 --> 01:04:01,603
+which will have to go implement.
+一会儿实现
+
+1595
+01:04:01,605 --> 01:04:03,572
+And what anchor?
+哪一点？
+
+1596
+01:04:03,573 --> 01:04:05,540
+Well, I'm gonna anchor it to the gesturePoint, 'kay?
+把它设置为手势的那一点
+
+1597
+01:04:05,542 --> 01:04:07,141
+Wherever that pan gesture is.
+手势在哪，那一点就在哪
+
+1598
+01:04:07,143 --> 01:04:08,709
+So let's do this lastDroppedView.
+现在来处理 lastDroppedView
+
+1599
+01:04:08,711 --> 01:04:10,544
+That's easy.
+这很简单
+
+1600
+01:04:10,545 --> 01:04:12,378
+We'll just say var lastDroppedView.
+创建 lastDroppedView
+
+1601
+01:04:12,381 --> 01:04:15,415
+It's a UIView that can be nil if we're not currently
+类型是 UIView，它可以使 nil 如果现在还没有
+
+1602
+01:04:15,417 --> 01:04:17,184
+dropping.
+掉落的
+
+1603
+01:04:17,185 --> 01:04:18,952
+And then down here in drop or we drop something,
+在这里，掉落的时候
+
+1604
+01:04:18,954 --> 01:04:21,721
+I'm just gonna say that the lastDroppedView equals to
+把 lastDroppedView 等于
+
+1605
+01:04:21,723 --> 01:04:23,389
+the dropView.
+dropView
+
+1606
+01:04:23,390 --> 01:04:25,056
+'Kay, so I'm just keeping track of the lastDroppedView.
+所以我在跟踪这个 lastDroppedView
+
+1607
+01:04:26,193 --> 01:04:28,460
+'Kay, that make sense?
+能说得通吧
+
+1608
+01:04:28,462 --> 01:04:31,463
+An exclamation point, yeah.
+一个感叹号
+
+1609
+01:04:31,465 --> 01:04:32,730
+No, we don't want that.
+不，我不要这样
+
+1610
+01:04:32,732 --> 01:04:36,734
+We want to say.
+我们...
+
+1611
+01:04:36,736 --> 01:04:39,103
+And actually, I guess we'll always have last drop view.
+实际上，我认为我们会一直拥有 lastDropView
+
+1612
+01:04:39,105 --> 01:04:42,572
+This is the kind of one where it's like, if let there, or
+这里应该使用 if let
+
+1613
+01:04:42,574 --> 01:04:44,074
+do I just wanna do it.
+或者直接解包
+
+1614
+01:04:44,076 --> 01:04:45,241
+Actually, I'm just gonna if let.
+实际上我会使用 if let
+
+1615
+01:04:45,243 --> 01:04:46,709
+I just wanna be careful here in case for
+我想在这里小心一点
+
+1616
+01:04:46,711 --> 01:04:48,043
+some reason the last drop view isn't around.
+以防这个 lastDropView 不存在
+
+1617
+01:04:48,045 --> 01:04:52,814
+So I'm gonna say if we can let the viewToAttachTo equal
+if let viewToAttachTo = 
+
+1618
+01:04:52,816 --> 01:04:54,849
+the lastDroppedView,
+lastDroppedView
+
+1619
+01:04:54,851 --> 01:04:57,251
+then we will start this attachment business.
+然后我会开始 attachment 的创建
+
+1620
+01:04:59,521 --> 01:05:02,655
+'Kay, it'll be safe there, because we might change
+现在这里安全了
+
+1621
+01:05:02,657 --> 01:05:04,724
+something in the future where we don't always set the last
+因为我们可能再以后
+
+1622
+01:05:04,726 --> 01:05:07,093
+drop view to something, so I wanna be careful there.
+不总是设置 lastDropView，所以需要小心点
+
+1623
+01:05:07,095 --> 01:05:09,094
+[COUGH] So, we have the attachment.
+所以现在有了 attachment
+
+1624
+01:05:09,096 --> 01:05:11,630
+By the way, I'm also gonna put a feature of my game that once
+游戏中还会添加一个特性
+
+1625
+01:05:11,632 --> 01:05:14,165
+you grab onto something, you can't grab onto it again.
+如果你抓住了某个东西，你不能再次抓住它
+
+1626
+01:05:14,167 --> 01:05:16,267
+Like, if you grab onto it and let it go.
+如果你抓住了它，然后放手
+
+1627
+01:05:16,269 --> 01:05:18,002
+I'm not gonna let you grab onto it again because I might
+我不会再让你抓住它
+
+1628
+01:05:18,004 --> 01:05:20,571
+wanna eventually turn this into a game where you have to
+因为我想把这个游戏变成
+
+1629
+01:05:20,573 --> 01:05:23,206
+like, line the things up into perfect stacks or
+把这些方块排成一列
+
+1630
+01:05:23,208 --> 01:05:25,342
+something like that, and
+之类的
+
+1631
+01:05:25,343 --> 01:05:27,477
+so I can put something in here like this to make my
+增加的这个特性
+
+1632
+01:05:27,479 --> 01:05:29,312
+game a little more challenging where I can't constantly be
+让游戏更有挑战性一点
+
+1633
+01:05:29,314 --> 01:05:33,048
+just regrabbing it until I get exactly where I want, okay.
+我不能一直松开抓住，直到调整为我想要的地方
+
+1634
+01:05:33,050 --> 01:05:34,917
+So that's it.
+好的
+
+1635
+01:05:34,918 --> 01:05:36,785
+All I have to do in began is create that attachment and
+在 .began 只需要做这些事情
+
+1636
+01:05:36,787 --> 01:05:37,986
+then if things change.
+如果手势改变了
+
+1637
+01:05:37,988 --> 01:05:42,123
+[SOUND] All I have to do is change that anchor point.
+我需要做的只有改变锚点
+
+1638
+01:05:42,125 --> 01:05:43,957
+That's the attachment's anchorPoint, and
+这是 attachment 的锚点
+
+1639
+01:05:43,959 --> 01:05:46,093
+if the attachment is nil, this will just do nothing.
+如果 attachment 是 nil，这什么都不会做
+
+1640
+01:05:46,095 --> 01:05:47,160
+That's fine.
+这没关系
+
+1641
+01:05:47,162 --> 01:05:48,594
+So that's the gesturePoint.
+这是 gesturePoint
+
+1642
+01:05:48,596 --> 01:05:52,031
+And when it's all over, 'kay, the span is just gonna say
+当手势结束的时候
+
+1643
+01:05:52,033 --> 01:05:54,667
+attachment equals nil, [COUGH] okay?
+把 attachment 设置为 nil
+
+1644
+01:05:54,669 --> 01:05:57,069
+All done.
+完成
+
+1645
+01:05:57,070 --> 01:05:59,470
+So, and of course, we have the default case,
+当然，还有 default
+
+1646
+01:05:59,473 --> 01:06:04,475
+all the things like the Pan failed or
+手势不完整等等
+
+1647
+01:06:04,477 --> 01:06:06,444
+whatever, I'm just gonna do nothing in that case.
+在这个 case 什么都不做
+
+1648
+01:06:06,446 --> 01:06:08,179
+That's probably not,
+其实也不是
+
+1649
+01:06:08,180 --> 01:06:09,913
+actually, I probably should be doing something here if,
+如果我在一个手势的中间
+
+1650
+01:06:09,915 --> 01:06:11,415
+like if I was in the middle of this and
+突然间一个电话打进来了
+
+1651
+01:06:11,417 --> 01:06:13,650
+a phone call came in and my Pan failed,
+手势没有完成
+
+1652
+01:06:13,652 --> 01:06:17,120
+I probably should be doing attachment equals nil.
+我也许应该把 attachment 设置为 nil
+
+1653
+01:06:17,122 --> 01:06:19,422
+'Kay, so probably attachment equals nil should be
+所以在 default 中 
+
+1654
+01:06:19,424 --> 01:06:21,924
+the default case, but I haven't really analyzed that.
+应该吧 attachment 设置为 nil，但我没有分析过
+
+1655
+01:06:21,926 --> 01:06:24,059
+I haven't done that full design, but
+我没有做完整的设计
+
+1656
+01:06:24,061 --> 01:06:27,495
+that's something you obviously wanna think about if you're
+如果你们需要搭建什么，这些东西
+
+1657
+01:06:27,497 --> 01:06:28,763
+building something.
+是你需要考虑的
+
+1658
+01:06:28,765 --> 01:06:32,199
+Okay, [COUGH] now this attachment we're creating it,
+好的，attachment 创建完了
+
+1659
+01:06:32,201 --> 01:06:35,235
+but notice we never added to the dynamic animator.
+但我们没有把它添加到 dynamic animator 里
+
+1660
+01:06:35,237 --> 01:06:37,771
+So this attachment is not ever actually going to be animated.
+所以这个 attachment 不会有效果
+
+1661
+01:06:37,773 --> 01:06:41,307
+So where we're gonna do that, I'm actually gonna do that in
+应该在哪里处理呢
+
+1662
+01:06:41,309 --> 01:06:46,212
+the will set and did set of the attachment.
+应该在 attachment 的 willSet 和 didSet 里
+
+1663
+01:06:47,181 --> 01:06:49,781
+So in the will set, 'kay, that's this
+在 willSet 中
+
+1664
+01:06:49,783 --> 01:06:52,350
+attachment is about to be set to something new, I'm gonna
+attachment 需要设置到新的物体上了
+
+1665
+01:06:52,352 --> 01:06:58,389
+tell my animator to remove the existing attachment.
+我要告诉 animator 把存在的 attachment 去掉
+
+1666
+01:06:58,391 --> 01:07:00,958
+So if there's an attachment behavior that's existing right
+如果现在上面有一个 attachment behavior
+
+1667
+01:07:00,960 --> 01:07:05,395
+now, remove it, and similarly, as long as [COUGH] I
+删掉它
+
+1668
+01:07:05,397 --> 01:07:09,432
+am setting this to non-nil, if attachment is at nil, okay, so
+在 didSet 中
+
+1669
+01:07:09,434 --> 01:07:11,567
+if the attachment is not nil, then,
+如果 attachment 不是 nil
+
+1670
+01:07:11,569 --> 01:07:14,002
+my animator can have the behavior of the attachment.
+我的 animator 就可以拥有这个 attachment 特性
+
+1671
+01:07:14,004 --> 01:07:16,471
+Okay, this is getting pretty bad, okay.
+这里有点错误
+
+1672
+01:07:16,473 --> 01:07:17,105
+Got it?
+明白了吗？
+
+1673
+01:07:17,107 --> 01:07:17,972
+Sorry about that.
+抱歉
+
+1674
+01:07:17,974 --> 01:07:19,073
+So, get that?
+明白了？
+
+1675
+01:07:19,075 --> 01:07:21,275
+What I'm doing there?
+我在这里做了什么
+
+1676
+01:07:21,276 --> 01:07:23,476
+I'm basically adding and removing from the animator as
+在 attachment 被设置的时候
+
+1677
+01:07:23,479 --> 01:07:25,879
+the attachment is set, or not set.
+我只在 animator 里添加和删除了 attachment
+
+1678
+01:07:25,881 --> 01:07:28,948
+Now, we can go ahead and run this now, and I'm going to,
+现在开始运行程序
+
+1679
+01:07:28,950 --> 01:07:31,183
+we're not gonna be able to see it though,
+但是现在还看不到连接
+
+1680
+01:07:31,185 --> 01:07:34,386
+because we're not setting any Bezier path in our view, but
+因为我们没在 view 中设置 bezierpath
+
+1681
+01:07:34,388 --> 01:07:37,422
+let's go ahead and look at it, see what it looks like.
+但是我们看看效果
+
+1682
+01:07:38,625 --> 01:07:39,690
+Okay, so here's a drop.
+掉落一个
+
+1683
+01:07:39,692 --> 01:07:40,991
+I grabbed it.
+抓住它
+
+1684
+01:07:40,993 --> 01:07:43,527
+Okay, so if you can kind of imagine,
+想象一下
+
+1685
+01:07:43,529 --> 01:07:46,363
+I can even like, balance it on it's little stick.
+就像把它放在一个棍上，让它保持平衡
+
+1686
+01:07:46,365 --> 01:07:47,397
+>> [LAUGH].
+
+1687
+01:07:47,399 --> 01:07:49,416
+>> So you can see I'm at there.
+所以你们能看到，我在这里
+
+1688
+01:07:49,417 --> 01:07:51,434
+And if I let it go, or I can just bounce it off this thing.
+如果甩动它，让它撞击这个
+
+1689
+01:07:51,436 --> 01:07:52,267
+'Kay, it's still attached.
+它仍然连接着
+
+1690
+01:07:53,237 --> 01:07:53,835
+All right, see that.
+好的
+
+1691
+01:07:55,005 --> 01:07:57,505
+And I can let it go, and it'll bounce, 'kay?
+我松手，它仍然会弹跳
+
+1692
+01:07:57,507 --> 01:07:59,206
+I can grab the next one.
+我可以抓住下一个
+
+1693
+01:07:59,208 --> 01:08:01,608
+Now, it would be nicer if we could see this
+如果能看到
+
+1694
+01:08:01,610 --> 01:08:05,078
+little attachment wire that's on here, right?
+它们之间的连线就好了
+
+1695
+01:08:05,080 --> 01:08:08,281
+And we can, because we have this nice view that makes it
+我们也可以这么做
+
+1696
+01:08:08,283 --> 01:08:09,148
+easier to show a path.
+因为我们的 view 让显示 bezierPath 更容易
+
+1697
+01:08:09,150 --> 01:08:10,733
+So really,
+
+1698
+01:08:10,734 --> 01:08:12,317
+what we need to do is we just need to say let path equal
+let path = UIBezierPath
+
+1699
+01:08:12,319 --> 01:08:17,655
+UIBezierPath, and then we just need to say gameView,
+gameView.addPath
+
+1700
+01:08:17,657 --> 01:08:20,958
+addPath, this path, which we're gonna have to create,
+我们创建的这个 path
+
+1701
+01:08:20,960 --> 01:08:23,127
+and then again, we need a name for it, so
+我们还是需要一个 name
+
+1702
+01:08:23,129 --> 01:08:26,764
+we'll call this the attachment path name.
+我们给它起名为 Attachment
+
+1703
+01:08:26,766 --> 01:08:33,203
+Attachment, like that, 'kay, so a pathNames.Attachment.
+PathNames.Attachment
+
+1704
+01:08:33,205 --> 01:08:35,705
+'Kay, so really all we need to do is create
+我们需要做的就是创建这条
+
+1705
+01:08:35,707 --> 01:08:37,807
+that path in here.
+BezierPath
+
+1706
+01:08:37,809 --> 01:08:41,977
+'Kay, the path between the attachment point and
+attachment 点和
+
+1707
+01:08:41,979 --> 01:08:43,178
+the set path.
+抱歉，setPath
+
+1708
+01:08:43,180 --> 01:08:46,214
+[SOUND] Okay, we just need to create this path,
+我们只需要创建这个 path
+
+1709
+01:08:46,216 --> 01:08:49,183
+that goes from the attachment anchor point,
+从 attachment 的锚点
+
+1710
+01:08:49,185 --> 01:08:50,918
+to the middle of the view.
+到 view 的中间点
+
+1711
+01:08:50,920 --> 01:08:53,420
+Well, okay, we need to find that view.
+我们需要先找到这个 view
+
+1712
+01:08:53,422 --> 01:08:54,888
+So, how do we get the view?
+我们怎么能找到呢
+
+1713
+01:08:54,890 --> 01:08:57,457
+All behaviors, most of them anyway
+所有的 behavior，基本都
+
+1714
+01:08:57,459 --> 01:09:01,227
+can tell you the items that they're currently animating.
+基本都可以告诉你它们正在 animate 的东西
+
+1715
+01:09:01,229 --> 01:09:03,762
+All right, they're affecting the behavior of and
+attached behavior 可以
+
+1716
+01:09:03,764 --> 01:09:06,031
+attached behaviors can do that.
+获取得到
+
+1717
+01:09:06,033 --> 01:09:11,669
+[SOUND] So, I'm gonna say if the attachedView equals and
+if attachedView = 
+
+1718
+01:09:11,671 --> 01:09:13,838
+how am I gonna get it?
+如何获取呢
+
+1719
+01:09:13,840 --> 01:09:19,409
+I'm gonna get it by asking the attachments for its items.
+获取 attachment.items
+
+1720
+01:09:19,411 --> 01:09:22,412
+That's all the things that it is attaching, could be two
+这是它正在连接的所有东西
+
+1721
+01:09:22,414 --> 01:09:24,981
+items, could be one item, in our case gonna be one.
+可以使两个也可以是一个，在这里是一个
+
+1722
+01:09:24,983 --> 01:09:27,216
+Since it's one I'm just gonna get the first one.
+因为它只有一个，所以我获取第一个
+
+1723
+01:09:27,218 --> 01:09:31,186
+First is a array method, 'kay?
+first 是一个数组的方法
+
+1724
+01:09:31,188 --> 01:09:34,189
+And I'm gonna make sure that it's UIView,
+我要确保它是个 UIView
+
+1725
+01:09:34,191 --> 01:09:37,091
+it's going to be UIView, but, I'm gonna
+它也会是一个 UIView
+
+1726
+01:09:37,093 --> 01:09:41,228
+make sure it's a UIView so I'm gonna do if let here, 'kay?
+但是我得确保，所以在这里进行 if let
+
+1727
+01:09:41,230 --> 01:09:44,898
+So now I know that I've got the attached view that's going
+所以我获取到了连接到的视图
+
+1728
+01:09:44,900 --> 01:09:48,702
+on, it's in here.
+在这里
+
+1729
+01:09:48,704 --> 01:09:51,104
+So now I can make a connection between these two things.
+所以我现在可以在它们之间做一个连接
+
+1730
+01:09:51,106 --> 01:09:53,906
+I can just say path.moveToPoint,
+path.moveToPoint 
+
+1731
+01:09:53,908 --> 01:09:58,777
+I'll move to the anchor point, so that's the attachment's
+移动到锚点，attachments 的锚点
+
+1732
+01:09:58,779 --> 01:10:03,548
+anchorPoint, and then I'm going to path.addLineTo, and
+接着，path.addLienTo
+
+1733
+01:10:03,550 --> 01:10:08,318
+I'm just going to add a line to the attachedView's center.
+然后把连接视图的中心点传进去
+
+1734
+01:10:08,320 --> 01:10:11,388
+'Kay, so we got that.
+所以我们获取到了
+
+1735
+01:10:12,891 --> 01:10:14,824
+The only thing about this is,
+但出现的问题时
+
+1736
+01:10:14,826 --> 01:10:17,893
+this is only going to work once.
+这只会调用一次
+
+1737
+01:10:17,895 --> 01:10:20,529
+When did set happens of the attachment.
+在 attachment 的 didSet 发生的时候
+
+1738
+01:10:20,531 --> 01:10:22,997
+When I first create that thing it's gonna draw that line,
+当第一次创建它的时候，这条线会出现
+
+1739
+01:10:22,999 --> 01:10:25,366
+that's great but what if line of that moving it around?
+但是在移动的时候呢
+
+1740
+01:10:25,368 --> 01:10:27,702
+'Kay, when I move it around the anchor point moves so
+当我移动的时候，锚点移动了
+
+1741
+01:10:27,704 --> 01:10:29,770
+this is gonna be no good anymore.
+所以这就不好了
+
+1742
+01:10:29,772 --> 01:10:34,174
+So, I actually have to put this code inside of
+所以我需要把这些代码放到
+
+1743
+01:10:34,176 --> 01:10:38,377
+the attachment's action, 'kay?
+attachment.action 里
+
+1744
+01:10:38,379 --> 01:10:42,348
+So the action is just closure, once we put it inside
+action 就是一个闭包
+
+1745
+01:10:42,350 --> 01:10:46,451
+a closure we're gonna have to do self dots in here.
+所以我们需要在这里添加 self
+
+1746
+01:10:46,453 --> 01:10:49,287
+So we can be obvious that we are capturing self
+我们很清楚，当我们这么做的时候
+
+1747
+01:10:49,289 --> 01:10:50,654
+when we do this.
+是在捕获 self
+
+1748
+01:10:50,656 --> 01:10:53,624
+Here's another self dot that we need, and here's another
+这里也需要
+
+1749
+01:10:53,626 --> 01:10:58,795
+self dot and this we'll say question mark, okay?
+这里也需要，添加问号
+
+1750
+01:10:59,798 --> 01:11:00,963
+So here we have this action, so
+所以这里我们有了这个 action
+
+1751
+01:11:00,965 --> 01:11:04,066
+this is good, but, and this will work.
+很好，这也会有效
+
+1752
+01:11:04,068 --> 01:11:06,334
+Let's go ahead and run this.
+运行起来试试看
+
+1753
+01:11:09,139 --> 01:11:12,173
+'Kay, so grabby dots so you can see it works, right.
+抓住一个，可以看到它起作用了
+
+1754
+01:11:12,175 --> 01:11:16,109
+It's showing the connection there, but
+它显示了连接
+
+1755
+01:11:16,111 --> 01:11:17,310
+it doesn't clean up.
+但是它没有被清理
+
+1756
+01:11:17,312 --> 01:11:19,212
+That's no good, 'kay?
+这就不好了
+
+1757
+01:11:19,214 --> 01:11:21,213
+And so what's going on here?
+发生了什么
+
+1758
+01:11:21,215 --> 01:11:22,281
+'Kay, let's fix two problems.
+让我们一起改 bug
+
+1759
+01:11:22,283 --> 01:11:23,782
+One, this cleanup, is no good.
+一，这里需要清理
+
+1760
+01:11:23,784 --> 01:11:26,584
+That's just because in will set right here,
+这是因为在 willSet 里
+
+1761
+01:11:26,586 --> 01:11:31,756
+we need to tell our gameView to
+我们需要告诉 gameView
+
+1762
+01:11:31,758 --> 01:11:37,027
+set that path to nil, for that name, the path name.
+把 path 设置为 nil，对于这个 pathName
+
+1763
+01:11:37,029 --> 01:11:39,646
+Attachment, right?
+这个 attachment
+
+1764
+01:11:39,647 --> 01:11:42,264
+Every time we set a new one, we need to delete the old one.
+每一次我们设置一个新的，我们需要删除旧的
+
+1765
+01:11:42,267 --> 01:11:45,034
+The other thing is we got the memory cycle problem here.
+另一个问题是，在这里有了内存的循环引用
+
+1766
+01:11:45,036 --> 01:11:46,635
+[SOUND] Right?
+对吧
+
+1767
+01:11:46,637 --> 01:11:49,171
+Because this attachment, which self points to, so
+因为 self 指向 attachment 
+
+1768
+01:11:49,173 --> 01:11:50,672
+self points to attachment.
+
+
+1769
+01:11:50,674 --> 01:11:51,873
+Attachment has the action.
+attachments 有 action 
+
+1770
+01:11:51,875 --> 01:11:54,342
+The action points back to self, 'kay?
+在 action 中又指向了 self
+
+1771
+01:11:54,344 --> 01:11:56,877
+'Kay, here's to using it here the attachment itself.
+在这里又指向了自己
+
+1772
+01:11:56,879 --> 01:11:58,145
+But it's pointing back to self, so
+但是它指向了它自己
+
+1773
+01:11:58,147 --> 01:11:59,546
+we got a memory cycle here.
+所以我们有了循环引用
+
+1774
+01:11:59,548 --> 01:12:03,249
+So we have to say, that inside here, self,
+所以在这个闭包里
+
+1775
+01:12:03,251 --> 01:12:09,055
+should be unowned, in this closure, 'kay?
+self 应当为 unowned 
+
+1776
+01:12:09,057 --> 01:12:11,557
+And that means that the system will not
+这表明，系统不会为了这个闭包有效
+
+1777
+01:12:11,559 --> 01:12:14,626
+keep self in memory in order to make this closure work.
+而一直把 self 留在内存里
+
+1778
+01:12:14,628 --> 01:12:16,728
+It will assume the self is always gonna be there,
+它将会假设，self 是一直存在的
+
+1779
+01:12:16,730 --> 01:12:19,263
+which it is always gonna be, because if there's no self,
+其实它也是一直存在的
+
+1780
+01:12:19,265 --> 01:12:20,398
+there's no attachment.
+因为没有 self 就没有 attachment
+
+1781
+01:12:20,400 --> 01:12:22,800
+If there's no attachment, there's no action, so
+没有 attachment 就没有 action 
+
+1782
+01:12:22,802 --> 01:12:25,302
+then there's no closure, 'kay?
+当然也就没有闭包了
+
+1783
+01:12:25,304 --> 01:12:26,536
+So we broke that memory cycle here.
+所以在这里打破了循环
+
+1784
+01:12:26,538 --> 01:12:29,939
+All right, so that fixes both of these problems.
+问题都改好了
+
+1785
+01:12:29,941 --> 01:12:32,375
+So here we go,
+跑起来
+
+1786
+01:12:32,376 --> 01:12:34,810
+drop one, swing it around, well, bang it on here.
+掉下来一个，旋转它
+
+1787
+01:12:34,812 --> 01:12:35,644
+Woops.
+哦~
+
+1788
+01:12:35,646 --> 01:12:36,411
+Like that.
+像这样
+
+1789
+01:12:36,413 --> 01:12:37,712
+Let go.
+松手
+
+1790
+01:12:37,714 --> 01:12:40,448
+'Kay, put a whole bunch of these down here.
+多放几个
+
+1791
+01:12:40,450 --> 01:12:43,283
+'Kay, now notice that it, let's say I have enough of
+我们注意到
+
+1792
+01:12:43,285 --> 01:12:45,485
+these things to make a row disappear, but
+我们有足够多的东西来让一行小时
+
+1793
+01:12:45,487 --> 01:12:48,588
+if I drag onto this and I'm animating, see, the row won't
+如果我拽住一个
+
+1794
+01:12:48,590 --> 01:12:52,024
+disappear because we're never coming to stasis here, 'kay?
+行不会消失，因为没有到稳定的状态
+
+1795
+01:12:52,993 --> 01:12:54,559
+But if I let it come to stasis,
+但如果我让它稳定下来
+
+1796
+01:12:54,561 --> 01:12:56,428
+then we don't have a complete row.
+我们还没有完整的一行
+
+1797
+01:12:56,430 --> 01:12:58,563
+Okay, let's get it clear row.
+让它清除一行
+
+1798
+01:12:58,565 --> 01:13:01,098
+[SOUND] There we go.
+好的
+
+1799
+01:13:01,100 --> 01:13:03,000
+We got one, 'kay?
+我们有了一行
+
+1800
+01:13:03,002 --> 01:13:04,368
+So now we got a complete row there,
+有了一个完整的一行
+
+1801
+01:13:04,370 --> 01:13:06,403
+the third one up from the bottom.
+倒数第三行
+
+1802
+01:13:06,405 --> 01:13:10,539
+And as long we do this, it's not gonna come to stasis,
+只要我们这样做，它就不会是稳定状态
+
+1803
+01:13:10,541 --> 01:13:13,175
+not gonna pause, not gonna do it,
+不会暂停，不会消除
+
+1804
+01:13:13,177 --> 01:13:17,412
+but if we let go, settles down, now it'll do, 'kay?
+如果我们松手，安定下来，现在就会消除了
+
+1805
+01:13:17,414 --> 01:13:19,881
+All right, so that's it for that demo.
+demo 做完了
+
+1806
+01:13:19,883 --> 01:13:22,650
+I should got to show you a lot of different behaviours there.
+我应该展现给你许多不同的 behaviour
+
+1807
+01:13:22,652 --> 01:13:24,284
+I didn't show you push behaviour,
+我还没有展示 push 
+
+1808
+01:13:24,286 --> 01:13:26,920
+which you're gonna need for your assignment.
+你们作业中需要使用到
+
+1809
+01:13:26,922 --> 01:13:28,988
+I didn't show you snap behaviour which is very
+还有 snap
+
+1810
+01:13:28,990 --> 01:13:31,391
+commonly used in the UI, but you don't need it for
+在 UI 中非常常用
+
+1811
+01:13:31,393 --> 01:13:34,060
+your assignment, so I didn't show that one, but
+但是作业中不需要，所以我没展示
+
+1812
+01:13:34,062 --> 01:13:36,195
+I showed you the collider and the gravity.
+但是我展示了 collider 还有 gravity
+
+1813
+01:13:36,197 --> 01:13:39,064
+The gravity is an optional one in your assignment, you might
+在作业中 gravity 是可选的
+
+1814
+01:13:39,066 --> 01:13:41,066
+wanna use gravity, it could be fun, totally up to you.
+你可以使用，会很有趣，根据你来
+
+1815
+01:13:41,068 --> 01:13:43,534
+[SOUND] But that's it.
+好的
+
+1816
+01:13:43,536 --> 01:13:45,169
+So, good luck with assignment five, and
+祝你们作业完成地愉快
+
+1817
+01:13:45,171 --> 01:13:47,271
+if you have any questions, I'll be here as usual.
+如果有问题，过来找我
+
+1818
+01:13:48,374 --> 01:13:48,405
+>> For more, please visit us at Stanford.edu.
